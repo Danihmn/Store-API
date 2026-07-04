@@ -6,6 +6,7 @@ namespace Store.Infrastructure.Data.StoreContext;
 public class StoreContext (DbContextOptions<StoreContext> options) : DbContext(options)
 {
     public virtual DbSet<Customer> Customers { get; set; }
+    public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Address> Addresses { get; set; }
     public virtual DbSet<Store.Domain.Entities.Store> Stores { get; set; }
     public virtual DbSet<Order> Orders { get; set; }
