@@ -13,6 +13,9 @@ namespace Store.Infrastructure.Data.Mappings
 
             builder.ToTable("users", "store");
 
+            builder.HasIndex(e => e.Email, "uq_users_email").IsUnique();
+            builder.HasIndex(e => e.Role, "chk_users_role");
+
             builder.Property(e => e.Id)
                 .HasDefaultValueSql("gen_random_uuid()")
                 .HasColumnName("id");
