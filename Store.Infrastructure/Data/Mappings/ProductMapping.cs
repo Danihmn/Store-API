@@ -17,11 +17,11 @@ public class ProductMapping : IEntityTypeConfiguration<Product>
             .HasColumnName("id");
         builder.Property(e => e.CreatedAt)
             .HasDefaultValueSql("now()")
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamptz")
             .HasColumnName("created_at");
         builder.Property(e => e.UpdatedAt)
             .HasDefaultValueSql("now()")
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamptz")
             .HasColumnName("updated_at");
         builder.Property(e => e.Description)
             .HasMaxLength(200)

@@ -19,11 +19,11 @@ public class StoreMapping : IEntityTypeConfiguration<Store.Domain.Entities.Store
             .HasColumnName("id");
         builder.Property(e => e.CreatedAt)
             .HasDefaultValueSql("now()")
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamptz")
             .HasColumnName("created_at");
         builder.Property(e => e.UpdatedAt)
             .HasDefaultValueSql("now()")
-            .HasColumnType("timestamp without time zone")
+            .HasColumnType("timestamptz")
             .HasColumnName("updated_at");
         builder.Property(e => e.LegalName)
             .HasMaxLength(200)
