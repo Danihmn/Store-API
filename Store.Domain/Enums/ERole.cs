@@ -5,5 +5,5 @@ public enum ERole
     Admin,
     Seller,
     Purchaser,
-    StockClerk,
+    StockClerk
 }

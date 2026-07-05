@@ -19,9 +19,27 @@ public class Role : ValueObject
 
     public static Result<Role> Create (string value)
     {
-        if (string.IsNullOrWhiteSpace(value) || !Enum.TryParse<ERole>(value, out var type))
-            return Result.Fail("Invalid role");
+        ERole type;
 
-        return Result.Ok(new Role(value, type));
+        switch (value.ToLower())
+        {
+            case "admin":
+                type = ERole.Admin;
+                break;
+            case "seller":
+                type = ERole.Seller;
+                break;
+            case "purchaser":
+                type = ERole.Purchaser;
+                break;
+            case "stock_clerk":
+                type = ERole.StockClerk;
+                break;
+            default:
+                return Result.Fail<Role>("Invalid role");
+        }
+
+
+        return Result.Ok(new Role(value.ToLower(), type));
     }
 }
