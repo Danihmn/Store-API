@@ -10,11 +10,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<StoreContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapOpenApi();
 app.MapProductEndpoints();
