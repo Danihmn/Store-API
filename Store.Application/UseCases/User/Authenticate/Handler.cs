@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Store.Domain.Repositories;
 using Store.Domain.Secutiry;
 using Store.Infrastructure.Security.Services;
@@ -15,6 +16,6 @@ public class Handler (IUserRepository repository, ITokenService tokenService) : 
         if (user is null || !PasswordService.IsValidPassword(request.Password, user.HashedPassword))
             return Result.Fail(new Error("Invalid credentials"));
 
-        return Result.Ok(new Response(Token: tokenService.Create(user), Type: "Bearer"));
+        return Result.Ok(new Response(Token: tokenService.Create(user), Type: JwtBearerDefaults.AuthenticationScheme));
     }
 }
