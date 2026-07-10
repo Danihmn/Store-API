@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Store.Domain.Entities;
 using Store.Domain.Repositories;
+using Store.Domain.ValueObjects;
 using Store.Infrastructure.Data.StoreContext;
 
 namespace Store.Infrastructure.Repositories;
@@ -21,9 +22,14 @@ public class UserRepository (StoreContext context) : IUserRepository
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
     public async Task<User?> GetByEmailAsync (string email, CancellationToken cancellationToken = default)
-        => await context.Users
+    {
+        var emailVO = Email.FromPersistence(email);
+
+        return await context.Users
             .AsNoTracking()
-            .FirstOrDefaultAsync(s => s.Email.Value == email, cancellationToken);
+            .Where(u => u.Email == emailVO)
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+    }
 
     public async Task<User> CreateAsync (User entity, CancellationToken cancellationToken = default)
     {

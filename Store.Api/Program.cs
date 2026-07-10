@@ -47,6 +47,7 @@ app.MapAddressEndpoints();
 app.MapStoreEndpoints();
 app.MapOrderEndpoints();
 app.MapOrderProductEndpoints();
+app.MapUserEndpoints();
 
 app.MapScalarApiReference("/scalar", options =>
 {
