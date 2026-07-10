@@ -9,7 +9,7 @@ namespace Store.Infrastructure.Security.Services;
 
 public class TokenService (string secret) : ITokenService
 {
-    public string Create (User user)
+    public string GenerateToken (User user)
     {
         var handler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(secret);
