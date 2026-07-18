@@ -5,7 +5,7 @@ using Store.Infrastructure.Data.StoreContext;
 
 namespace Store.Infrastructure.Repositories;
 
-internal class OrderProductRepository (StoreContext context) : IOrderProductRepository
+internal class OrderProductRepository(StoreContext context) : IOrderProductRepository
 {
     public async Task<IEnumerable<OrderProduct>?> GetAllAsync
         (int skip = 0, int take = 10, CancellationToken cancellationToken = default)
@@ -15,7 +15,7 @@ internal class OrderProductRepository (StoreContext context) : IOrderProductRepo
             .Take(take)
             .ToListAsync(cancellationToken);
 
-    public async Task<OrderProduct?> GetByIdAsync (Guid id, CancellationToken cancellationToken = default)
+    public async Task<OrderProduct?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => throw new NotSupportedException("OrderProduct uses composite key. Use GetByCompositeKeyAsync.");
 
     public async Task<IEnumerable<OrderProduct>?> GetByOrderIdAsync
@@ -31,29 +31,38 @@ internal class OrderProductRepository (StoreContext context) : IOrderProductRepo
             .AsNoTracking()
             .FirstOrDefaultAsync(op => op.OrderId == orderId && op.ProductId == productId, cancellationToken);
 
-    public async Task<OrderProduct> CreateAsync (OrderProduct entity, CancellationToken cancellationToken = default)
+    public async Task<OrderProduct> CreateAsync(OrderProduct entity, CancellationToken cancellationToken = default)
     {
         await context.AddAsync(entity, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
-    public async Task<OrderProduct> UpdateAsync (OrderProduct entity, CancellationToken cancellationToken = default)
+    public async Task<OrderProduct> UpdateAsync(OrderProduct entity, CancellationToken cancellationToken = default)
     {
         context.OrderProducts.Update(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
-    public async Task DeleteAsync (Guid id, CancellationToken cancellationToken = default)
-        => throw new NotSupportedException("OrderProduct uses composite key. Use DeleteByCompositeKeyAsync.");
+    public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            throw new NotSupportedException("OrderProduct uses composite key. Use DeleteByCompositeKeyAsync.");
+        }
+        catch (Exception exception)
+        {
+            return Task.FromException(exception);
+        }
+    }
 
     public async Task DeleteByCompositeKeyAsync
         (Guid orderId, Guid productId, CancellationToken cancellationToken = default)
     {
         var item = await context.OrderProducts
-            .FirstOrDefaultAsync(op => op.OrderId == orderId && op.ProductId == productId, cancellationToken)
-            ?? throw new KeyNotFoundException("Order product not found");
+                       .FirstOrDefaultAsync(op => op.OrderId == orderId && op.ProductId == productId, cancellationToken)
+                   ?? throw new KeyNotFoundException("Order product not found");
 
         context.OrderProducts.Remove(item);
         await context.SaveChangesAsync(cancellationToken);

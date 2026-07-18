@@ -9,7 +9,7 @@ namespace Store.Api.Endpoints;
 
 public static class CustomerEndpoints
 {
-    public static void MapCustomerEndpoints (this IEndpointRouteBuilder app)
+    public static void MapCustomerEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/customers").WithTags("Customers");
 

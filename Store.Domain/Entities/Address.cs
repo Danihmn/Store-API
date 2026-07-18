@@ -12,7 +12,7 @@ public class Address : Entity
     public string State { get; private set; }
     public ZipCode ZipCode { get; private set; }
 
-    private Address (string street, string city, string state, ZipCode zipCode)
+    private Address(string street, string city, string state, ZipCode zipCode)
     {
         Street = street;
         City = city;
@@ -22,7 +22,7 @@ public class Address : Entity
         UpdatedAt = DateTime.UtcNow;
     }
 
-    public static Result<Address> Create (string street, string city, string state, string zipCode)
+    public static Result<Address> Create(string street, string city, string state, string zipCode)
     {
         var errors = new List<IError>();
 
@@ -34,15 +34,16 @@ public class Address : Entity
 
         zipCodeResult.AddErrorsTo(errors);
 
-        if (errors.Count > 0) return Result.Fail<Address>(errors);
-
-        return Result.Ok(new Address(street, city, state, zipCodeResult.Value));
+        return errors.Count > 0
+            ? Result.Fail<Address>(errors)
+            : Result.Ok(new Address(street, city, state, zipCodeResult.Value));
     }
 
-    public Result UpdateAddress (string? street = null, string? city = null, string? state = null, string? zipCode = null)
+    public Result UpdateAddress(string? street = null, string? city = null, string? state = null,
+        string? zipCode = null)
     {
         var errors = new List<IError>();
-        ZipCode? newZipCode = ZipCode;
+        var newZipCode = ZipCode;
 
         if (zipCode != null)
         {

@@ -7,11 +7,11 @@ namespace Store.Domain.Entities;
 
 public class Customer : Entity
 {
-    public string Name { get; private set; } = null!;
-    public Email Email { get; private set; } = null!;
+    public string Name { get; private set; }
+    public Email Email { get; private set; }
     public Phone Phone { get; private set; }
 
-    private Customer (string name, Email email, Phone phone)
+    private Customer(string name, Email email, Phone phone)
     {
         Name = name;
         Email = email;
@@ -20,7 +20,7 @@ public class Customer : Entity
         UpdatedAt = DateTime.UtcNow;
     }
 
-    public static Result<Customer> Create (string name, string email, string phone)
+    public static Result<Customer> Create(string name, string email, string phone)
     {
         var errors = new List<IError>();
 
@@ -32,12 +32,12 @@ public class Customer : Entity
         emailResult.AddErrorsTo(errors);
         phoneResult.AddErrorsTo(errors);
 
-        if (errors.Count > 0) return Result.Fail<Customer>(errors);
-
-        return Result.Ok(new Customer(name, emailResult.Value, phoneResult.Value));
+        return errors.Count > 0
+            ? Result.Fail<Customer>(errors)
+            : Result.Ok(new Customer(name, emailResult.Value, phoneResult.Value));
     }
 
-    public Result UpdateCustomer (string? name = null, string? email = null, string? phone = null)
+    public Result UpdateCustomer(string? name = null, string? email = null, string? phone = null)
     {
         var errors = new List<IError>();
 
