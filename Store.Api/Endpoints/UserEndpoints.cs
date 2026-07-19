@@ -18,7 +18,7 @@ public static class UserEndpoints
             return result.IsSuccess ? Results.Ok(result.Value) : Results.Unauthorized();
         });
 
-        group.MapPost("create",
+        group.MapPost("",
             async (ISender sender, CancellationToken cancellationToken, [FromBody] Create.Command command) =>
             {
                 var result = await sender.Send(command, cancellationToken);
