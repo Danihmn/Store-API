@@ -10,7 +10,7 @@ namespace Store.Api.Endpoints;
 
 public static class ProductEndpoints
 {
-    public static void MapProductEndpoints (this IEndpointRouteBuilder app)
+    public static void MapProductEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/products").WithTags("Products");
 
@@ -35,19 +35,19 @@ public static class ProductEndpoints
                 {
                     errors = result.Errors.Select(error => error.Message),
                 });
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "stock_clerk"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapPut("{id:Guid}", async
             (Guid id, Update.Command command, ISender sender, CancellationToken cancellationToken) =>
         {
             var result = await sender.Send(command with { Id = id }, cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "stock_clerk"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapDelete("{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
             var result = await sender.Send(new Delete.Command(id), cancellationToken);
             return result.IsSuccess ? Results.NoContent() : Results.NotFound(result);
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "stock_clerk"));
+        }).RequireAuthorization("admin", "seller");
     }
 }

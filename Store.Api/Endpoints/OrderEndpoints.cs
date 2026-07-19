@@ -10,7 +10,7 @@ namespace Store.Api.Endpoints;
 
 public static class OrderEndpoints
 {
-    public static void MapOrderEndpoints (this IEndpointRouteBuilder app)
+    public static void MapOrderEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/orders").WithTags("Orders");
 
@@ -18,7 +18,7 @@ public static class OrderEndpoints
         {
             var result = await sender.Send(new GetAll.Command(skip, take), cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapGet("{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
@@ -35,14 +35,14 @@ public static class OrderEndpoints
                 {
                     errors = result.Errors.Select(error => error.Message),
                 });
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "purchaser"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapPut("{id:Guid}", async
             (Guid id, Update.Command command, ISender sender, CancellationToken cancellationToken) =>
         {
             var result = await sender.Send(command with { Id = id }, cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapDelete("{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {

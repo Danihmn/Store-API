@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Authenticate = Store.Application.UseCases.User.Authenticate;
 using Create = Store.Application.UseCases.User.Create;
 
@@ -12,14 +11,14 @@ public static class UserEndpoints
         var group = app.MapGroup("/users").WithTags("Users");
 
         group.MapPost("authenticate", async
-            (ISender sender, CancellationToken cancellationToken, string email, string password) =>
+            (ISender sender, CancellationToken cancellationToken, Authenticate.Command command) =>
         {
-            var result = await sender.Send(new Authenticate.Command(email, password), cancellationToken);
+            var result = await sender.Send(command, cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.Unauthorized();
         });
 
         group.MapPost("",
-            async (ISender sender, CancellationToken cancellationToken, [FromBody] Create.Command command) =>
+            async (ISender sender, CancellationToken cancellationToken, Create.Command command) =>
             {
                 var result = await sender.Send(command, cancellationToken);
 
@@ -29,6 +28,6 @@ public static class UserEndpoints
                     {
                         errors = result.Errors.Select(error => error.Message),
                     });
-            }).RequireAuthorization("admin");
+            }).RequireAuthorization("admin", "seller");
     }
 }

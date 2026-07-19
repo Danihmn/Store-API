@@ -10,7 +10,7 @@ namespace Store.Api.Endpoints;
 
 public static class AddressEndpoints
 {
-    public static void MapAddressEndpoints (this IEndpointRouteBuilder app)
+    public static void MapAddressEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/addresses").WithTags("Addresses");
 
@@ -35,14 +35,14 @@ public static class AddressEndpoints
                 {
                     errors = result.Errors.Select(error => error.Message),
                 });
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapPut("{id:Guid}", async
             (Guid id, Update.Command command, ISender sender, CancellationToken cancellationToken) =>
         {
             var result = await sender.Send(command with { Id = id }, cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapDelete("{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {

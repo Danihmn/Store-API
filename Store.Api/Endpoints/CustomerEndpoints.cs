@@ -18,13 +18,13 @@ public static class CustomerEndpoints
         {
             var result = await sender.Send(new GetAll.Command(skip, take), cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapGet("{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
             var result = await sender.Send(new GetById.Command(id), cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapPost("", async (Create.Command command, ISender sender, CancellationToken cancellationToken) =>
         {
@@ -35,14 +35,14 @@ public static class CustomerEndpoints
                 {
                     errors = result.Errors.Select(error => error.Message),
                 });
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapPut("{id:Guid}", async
             (Guid id, Update.Command command, ISender sender, CancellationToken cancellationToken) =>
         {
             var result = await sender.Send(command with { Id = id }, cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapDelete("{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {

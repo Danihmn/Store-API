@@ -30,7 +30,13 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
     };
 });
-builder.Services.AddAuthorization(options => { options.AddPolicy("admin", policy => policy.RequireRole("admin")); });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("admin", policy => policy.RequireRole("admin"));
+    options.AddPolicy("seller", policy => policy.RequireRole("seller"));
+    options.AddPolicy("purchaser", policy => policy.RequireRole("purchaser"));
+    options.AddPolicy("stock_clerk", policy => policy.RequireRole("stock_clerk"));
+});
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);

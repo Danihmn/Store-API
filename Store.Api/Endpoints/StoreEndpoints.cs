@@ -10,7 +10,7 @@ namespace Store.Api.Endpoints;
 
 public static class StoreEndpoints
 {
-    public static void MapStoreEndpoints (this IEndpointRouteBuilder app)
+    public static void MapStoreEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/stores").WithTags("Stores");
 
@@ -42,7 +42,7 @@ public static class StoreEndpoints
         {
             var result = await sender.Send(command with { Id = id }, cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
+        }).RequireAuthorization("admin", "seller");
 
         group.MapDelete("{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
