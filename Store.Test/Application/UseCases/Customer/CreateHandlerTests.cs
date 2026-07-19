@@ -5,7 +5,7 @@ using Store.Domain.Repositories;
 namespace Store.Test.Application.UseCases.Customer;
 
 [TestClass]
-public class CreateHandlerTest
+public class CreateHandlerTests
 {
     private readonly Mock<ICustomerRepository> _customerRepository = new();
 

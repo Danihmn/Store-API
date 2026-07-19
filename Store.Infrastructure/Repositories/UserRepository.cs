@@ -48,7 +48,7 @@ public class UserRepository(StoreContext context) : IUserRepository
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var store = await context.Users.FirstOrDefaultAsync(s => s.Id == id, cancellationToken)
-                    ?? throw new KeyNotFoundException("Store not found");
+                    ?? throw new KeyNotFoundException("User not found");
 
         context.Users.Remove(store);
         await context.SaveChangesAsync(cancellationToken);
