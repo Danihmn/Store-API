@@ -4,7 +4,7 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Address.Delete;
 
-public sealed class CreateHandler (IAddressRepository repository) : IRequestHandler<Command, Result>
+public sealed class Handler (IAddressRepository repository) : IRequestHandler<Command, Result>
 {
     public async Task<Result> Handle (Command request, CancellationToken cancellationToken)
     {

@@ -4,7 +4,7 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Customer.GetAll;
 
-public sealed class CreateHandler (ICustomerRepository repository) : IRequestHandler<Command, Result<IEnumerable<Response>>>
+public sealed class Handler (ICustomerRepository repository) : IRequestHandler<Command, Result<IEnumerable<Response>>>
 {
     public async Task<Result<IEnumerable<Response>>> Handle (Command request, CancellationToken cancellationToken)
     {

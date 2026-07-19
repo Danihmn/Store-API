@@ -4,7 +4,7 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.OrderProduct.Update;
 
-public sealed class CreateHandler (IOrderProductRepository repository) : IRequestHandler<Command, Result<Response>>
+public sealed class Handler (IOrderProductRepository repository) : IRequestHandler<Command, Result<Response>>
 {
     public async Task<Result<Response>> Handle (Command request, CancellationToken cancellationToken)
     {

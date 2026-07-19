@@ -4,7 +4,7 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.OrderProduct.GetByOrderId;
 
-public sealed class CreateHandler (IOrderProductRepository repository) : IRequestHandler<Command, Result<IEnumerable<Response>>>
+public sealed class Handler (IOrderProductRepository repository) : IRequestHandler<Command, Result<IEnumerable<Response>>>
 {
     public async Task<Result<IEnumerable<Response>>> Handle (Command request, CancellationToken cancellationToken)
     {

@@ -4,7 +4,7 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Customer.Delete;
 
-public sealed class CreateHandler (ICustomerRepository repository) : IRequestHandler<Command, Result>
+public sealed class Handler (ICustomerRepository repository) : IRequestHandler<Command, Result>
 {
     public async Task<Result> Handle (Command request, CancellationToken cancellationToken)
     {

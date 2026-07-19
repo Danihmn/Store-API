@@ -7,7 +7,7 @@ using Store.Infrastructure.Security.Services;
 
 namespace Store.Application.UseCases.User.Authenticate;
 
-public class CreateHandler(IUserRepository repository, ITokenService tokenService) : IRequestHandler<Command,
+public class Handler(IUserRepository repository, ITokenService tokenService) : IRequestHandler<Command,
     Result<Response>>
 {
     public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)

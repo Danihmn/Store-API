@@ -4,7 +4,7 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Address.Create;
 
-public sealed class CreateHandler (IAddressRepository repository) : IRequestHandler<Command, Result<Response>>
+public sealed class Handler (IAddressRepository repository) : IRequestHandler<Command, Result<Response>>
 {
     public async Task<Result<Response>> Handle (Command request, CancellationToken cancellationToken)
     {

@@ -16,7 +16,7 @@ public class CreateHandlerTest
                 repository.CreateAsync(It.IsAny<Store.Domain.Entities.Customer>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Customer customer, CancellationToken _) => customer);
 
-        var handler = new CreateHandler(_customerRepository.Object);
+        var handler = new Handler(_customerRepository.Object);
         var result =
             await handler.Handle(new Command("Daniel Eduardo", "daniel.bezerra.mult@outlook.com", "+5519993054611"),
                 CancellationToken.None);
@@ -35,7 +35,7 @@ public class CreateHandlerTest
                 repository.CreateAsync(It.IsAny<Store.Domain.Entities.Customer>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Customer customer, CancellationToken _) => customer);
 
-        var handler = new CreateHandler(_customerRepository.Object);
+        var handler = new Handler(_customerRepository.Object);
         var result =
             await handler.Handle(new Command("Daniel Eduardo", "daniel.bezerra.mult", "5519993054611"),
                 CancellationToken.None);
