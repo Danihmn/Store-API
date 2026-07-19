@@ -12,7 +12,12 @@ public class Handler(IUserRepository repository, ITokenService tokenService)
 {
     public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
-        var newUser = Store.Domain.Entities.User.Create(request.Name, request.Email,
+        var existing = await repository.GetByEmailAsync(request.Email, cancellationToken);
+
+        if (existing != null)
+            return Result.Fail("Email already exists");
+
+        var newUser = Domain.Entities.User.Create(request.Name, request.Email,
             PasswordService.HashPassword(request.Password), request.Active,
             request.Role);
 

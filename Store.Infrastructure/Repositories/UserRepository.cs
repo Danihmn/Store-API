@@ -6,7 +6,7 @@ using Store.Infrastructure.Data.StoreContext;
 
 namespace Store.Infrastructure.Repositories;
 
-public class UserRepository (StoreContext context) : IUserRepository
+public class UserRepository(StoreContext context) : IUserRepository
 {
     public async Task<IEnumerable<User>?> GetAllAsync
         (int skip = 0, int take = 10, CancellationToken cancellationToken = default)
@@ -16,39 +16,39 @@ public class UserRepository (StoreContext context) : IUserRepository
             .Take(take)
             .ToListAsync(cancellationToken);
 
-    public async Task<User?> GetByIdAsync (Guid id, CancellationToken cancellationToken = default)
+    public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
-    public async Task<User?> GetByEmailAsync (string email, CancellationToken cancellationToken = default)
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        var emailVO = Email.FromPersistence(email);
+        var emailVo = Email.FromPersistence(email);
 
         return await context.Users
             .AsNoTracking()
-            .Where(u => u.Email == emailVO)
+            .Where(u => u.Email == emailVo)
             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
     }
 
-    public async Task<User> CreateAsync (User entity, CancellationToken cancellationToken = default)
+    public async Task<User> CreateAsync(User entity, CancellationToken cancellationToken = default)
     {
         await context.AddAsync(entity, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
-    public async Task<User> UpdateAsync (User entity, CancellationToken cancellationToken = default)
+    public async Task<User> UpdateAsync(User entity, CancellationToken cancellationToken = default)
     {
         context.Users.Update(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
-    public async Task DeleteAsync (Guid id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var store = await context.Users.FirstOrDefaultAsync(s => s.Id == id, cancellationToken)
-            ?? throw new KeyNotFoundException("Store not found");
+                    ?? throw new KeyNotFoundException("Store not found");
 
         context.Users.Remove(store);
         await context.SaveChangesAsync(cancellationToken);

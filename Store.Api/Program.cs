@@ -30,7 +30,7 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
     };
 });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options => { options.AddPolicy("admin", policy => policy.RequireRole("admin")); });
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);

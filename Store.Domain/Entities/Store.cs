@@ -7,13 +7,13 @@ namespace Store.Domain.Entities;
 
 public class Store : Entity
 {
-    public string LegalName { get; private set; } = null!;
+    public string LegalName { get; private set; }
     public string? TradeName { get; private set; }
-    public Document Cnpj { get; private set; } = null!;
+    public Document Cnpj { get; private set; }
     public bool Active { get; private set; }
     public Guid AddressId { get; private set; }
 
-    private Store (string legalName, Document cnpj, Guid addressId, string? tradeName, bool active)
+    private Store(string legalName, Document cnpj, Guid addressId, string? tradeName, bool active)
     {
         LegalName = legalName;
         TradeName = tradeName;
@@ -24,7 +24,8 @@ public class Store : Entity
         UpdatedAt = DateTime.UtcNow;
     }
 
-    public static Result<Store> Create (string legalName, string cnpj, Guid addressId, string? tradeName = null, bool active = true)
+    public static Result<Store> Create(string legalName, string cnpj, Guid addressId, string? tradeName = null,
+        bool active = true)
     {
         var errors = new List<IError>();
 
@@ -35,13 +36,13 @@ public class Store : Entity
 
         cnpjResult.AddErrorsTo(errors);
 
-        if (errors.Count > 0)
-            return Result.Fail<Store>(errors);
-
-        return Result.Ok(new Store(legalName, cnpjResult.Value, addressId, tradeName, active));
+        return errors.Count > 0
+            ? Result.Fail<Store>(errors)
+            : Result.Ok(new Store(legalName, cnpjResult.Value, addressId, tradeName, active));
     }
 
-    public Result UpdateStore (string? legalName = null, string? tradeName = null, string? cnpj = null, bool? active = null, Guid? addressId = null)
+    public Result UpdateStore(string? legalName = null, string? tradeName = null, string? cnpj = null,
+        bool? active = null, Guid? addressId = null)
     {
         var errors = new List<IError>();
         Document newCnpj = Cnpj;

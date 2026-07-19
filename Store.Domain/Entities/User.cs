@@ -37,9 +37,9 @@ public class User : Entity
         emailResult.AddErrorsTo(errors);
         roleResult.AddErrorsTo(errors);
 
-        if (errors.Count > 0) return Result.Fail<User>(errors);
-
-        return Result.Ok(new User(name, emailResult.Value, hashedPassword, active ?? true, roleResult.Value));
+        return errors.Count > 0
+            ? Result.Fail<User>(errors)
+            : Result.Ok(new User(name, emailResult.Value, hashedPassword, active ?? true, roleResult.Value));
     }
 
     public Result UpdateUser(string? name = null, string? email = null, string? hashedPassword = null,

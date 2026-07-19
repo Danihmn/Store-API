@@ -22,13 +22,13 @@ public static class UserEndpoints
             async (ISender sender, CancellationToken cancellationToken, [FromBody] Create.Command command) =>
             {
                 var result = await sender.Send(command, cancellationToken);
-                
+
                 return result.IsSuccess
                     ? Results.Ok(result.Value)
                     : Results.BadRequest(new
                     {
                         errors = result.Errors.Select(error => error.Message),
                     });
-            });
+            }).RequireAuthorization("admin");
     }
 }
