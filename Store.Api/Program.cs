@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -20,7 +21,7 @@ builder.Services.AddAuthentication(options =>
 }).AddJwtBearer(options =>
 {
     var key = Encoding.UTF8.GetBytes(builder.Configuration["JwtSecretKey"]
-        ?? throw new InvalidOperationException("JWT key is not configured"));
+                                     ?? throw new InvalidOperationException("JWT key is not configured"));
 
     options.TokenValidationParameters = new TokenValidationParameters()
     {
@@ -33,7 +34,11 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.CreateSchemaReferenceId = jsonTypeInfo =>
+        jsonTypeInfo.Type.FullName?.Replace("+", ".");
+});
 
 var app = builder.Build();
 
@@ -41,6 +46,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapOpenApi();
+
 app.MapProductEndpoints();
 app.MapCustomerEndpoints();
 app.MapAddressEndpoints();

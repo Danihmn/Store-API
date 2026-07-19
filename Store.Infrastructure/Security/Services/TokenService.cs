@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Store.Infrastructure.Security.Services;
 
-public class TokenService (string secret) : ITokenService
+public class TokenService(string secret) : ITokenService
 {
-    public string GenerateToken (User user)
+    public string GenerateToken(User user)
     {
         var handler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(secret);
@@ -21,16 +21,17 @@ public class TokenService (string secret) : ITokenService
             Subject = GenerateClaims(user)
         };
         var token = handler.CreateToken(tokenDescriptor);
+
         return handler.WriteToken(token);
     }
 
-    private static ClaimsIdentity GenerateClaims (User user)
+    private static ClaimsIdentity GenerateClaims(User user)
         => new(
-            [
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Name, user.Email.Value),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.Name),
-                new Claim("role", user.Role.Value)
-            ]);
+        [
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Name, user.Email.Value),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
+            new Claim(JwtRegisteredClaimNames.GivenName, user.Name),
+            new Claim("role", user.Role.Value)
+        ]);
 }

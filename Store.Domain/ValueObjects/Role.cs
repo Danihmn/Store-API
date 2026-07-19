@@ -9,15 +9,15 @@ public class Role : ValueObject
     public string Value { get; }
     public ERole Type { get; }
 
-    private Role (string value, ERole type)
+    private Role(string value, ERole type)
     {
         Value = value;
         Type = type;
     }
 
-    public static Role FromPersistence (string value) => new(value, Enum.Parse<ERole>(value));
+    public static Role FromPersistence(string value) => new(value, Enum.Parse<ERole>(value, ignoreCase: true));
 
-    public static Result<Role> Create (string value)
+    public static Result<Role> Create(string value)
     {
         ERole type;
 

@@ -7,13 +7,13 @@ namespace Store.Domain.Entities;
 
 public class User : Entity
 {
-    public string Name { get; private set; } = null!;
-    public Email Email { get; private set; } = null!;
-    public string HashedPassword { get; private set; } = null!;
+    public string Name { get; private set; }
+    public Email Email { get; private set; }
+    public string HashedPassword { get; private set; }
     public bool Active { get; private set; }
-    public Role Role { get; private set; } = null!;
+    public Role Role { get; private set; }
 
-    private User (string name, Email email, string hashedPassword, bool active, Role role)
+    private User(string name, Email email, string hashedPassword, bool active, Role role)
     {
         Name = name;
         Email = email;
@@ -24,7 +24,7 @@ public class User : Entity
         UpdatedAt = DateTime.UtcNow;
     }
 
-    public static Result<User> Create (string name, string email, string hashedPassword, bool active, string role)
+    public static Result<User> Create(string name, string email, string hashedPassword, bool? active, string role)
     {
         var errors = new List<IError>();
 
@@ -39,10 +39,11 @@ public class User : Entity
 
         if (errors.Count > 0) return Result.Fail<User>(errors);
 
-        return Result.Ok(new User(name, emailResult.Value, hashedPassword, active, roleResult.Value));
+        return Result.Ok(new User(name, emailResult.Value, hashedPassword, active ?? true, roleResult.Value));
     }
 
-    public Result UpdateUser (string? name = null, string? email = null, string? hashedPassword = null, bool? active = null, string? role = null)
+    public Result UpdateUser(string? name = null, string? email = null, string? hashedPassword = null,
+        bool? active = null, string? role = null)
     {
         var errors = new List<IError>();
 
