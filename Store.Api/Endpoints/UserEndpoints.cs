@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using MediatR;
+using Store.Api.Extensions.Endpoints;
 using Authenticate = Store.Application.UseCases.User.Authenticate;
 using Create = Store.Application.UseCases.User.Create;
 
@@ -9,6 +11,15 @@ public static class UserEndpoints
     public static void MapUserEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/users").WithTags("Users");
+
+        group.MapGet("me", (ClaimsPrincipal user) =>
+            new
+            {
+                Id = user.Id(),
+                Name = user.Name(),
+                Email = user.Email(),
+                Role = user.Role()
+            });
 
         group.MapPost("authenticate", async
             (ISender sender, CancellationToken cancellationToken, Authenticate.Command command) =>
