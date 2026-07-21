@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Create = Store.Application.UseCases.Address.Create;
@@ -26,8 +27,15 @@ public static class AddressEndpoints
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
         }).RequireAuthorization();
 
-        group.MapPost("", async (Create.Command command, ISender sender, CancellationToken cancellationToken) =>
+        group.MapPost("", async
+        (Create.Command command, ISender sender, IValidator<Create.Command> validator,
+            CancellationToken cancellationToken) =>
         {
+            var validation = await validator.ValidateAsync(command, cancellationToken);
+
+            if (!validation.IsValid)
+                return Results.BadRequest(validation.ToDictionary());
+
             var result = await sender.Send(command, cancellationToken);
             return result.IsSuccess
                 ? Results.Created($"/addresses/{result.Value.Id}", result.Value)
@@ -35,19 +43,26 @@ public static class AddressEndpoints
                 {
                     errors = result.Errors.Select(error => error.Message),
                 });
-        }).RequireAuthorization("admin", "seller");
+        }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin,seller" });
 
         group.MapPut("{id:Guid}", async
-            (Guid id, Update.Command command, ISender sender, CancellationToken cancellationToken) =>
+        (Guid id, Update.Command command, ISender sender, IValidator<Update.Command> validator,
+            CancellationToken cancellationToken) =>
         {
-            var result = await sender.Send(command with { Id = id }, cancellationToken);
+            var updated = command with { Id = id };
+            var validation = await validator.ValidateAsync(updated, cancellationToken);
+
+            if (!validation.IsValid)
+                return Results.BadRequest(validation.ToDictionary());
+
+            var result = await sender.Send(updated, cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization("admin", "seller");
+        }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin,seller" });
 
         group.MapDelete("{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
             var result = await sender.Send(new Delete.Command(id), cancellationToken);
             return result.IsSuccess ? Results.NoContent() : Results.NotFound(result);
-        }).RequireAuthorization("admin");
+        }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin" });
     }
 }

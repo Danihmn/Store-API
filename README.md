@@ -72,6 +72,7 @@ Operações disponíveis por entidade:
 ### Api
 
 - **Minimal API** com endpoints agrupados por entidade (`MapGroup`)
+- **FluentValidation** — validação de entrada nos endpoints `POST`/`PUT`, com um `AbstractValidator` por `Command` em `Validators/{Entidade}`, registrados automaticamente via `AddValidatorsFromAssembly`. Requisições inválidas retornam `400 Bad Request` antes de chegar ao handler
 - **Autenticação JWT Bearer** via `Microsoft.AspNetCore.Authentication.JwtBearer`
 - **Autorização baseada em papéis (role)**, com policy `admin` e checagens `RequireRole` por endpoint
 - **OpenAPI** gerado nativamente pelo ASP.NET Core
@@ -118,6 +119,7 @@ Listagens (`GetAll`) suportam paginação via query string `skip` e `take` (padr
 | Entity Framework Core | ORM |
 | Npgsql | Driver PostgreSQL |
 | MediatR | Mediador para handlers de casos de uso |
+| FluentValidation | Validação de entrada dos endpoints (`Command`s) |
 | FluentResults | Implementação do Result pattern |
 | JWT Bearer (Microsoft.AspNetCore.Authentication.JwtBearer) | Autenticação |
 | Microsoft.Extensions.Identity.Core (PasswordHasher) | Hash de senha |

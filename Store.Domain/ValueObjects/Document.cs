@@ -19,7 +19,7 @@ public class Document : ValueObject
     public static Document FromPersistence (string value)
     {
         var clean = Clean(value);
-        var type = clean.Length == 11 ? EDocumentType.CPF : EDocumentType.CNPJ;
+        var type = clean.Length == 11 ? EDocumentType.Cpf : EDocumentType.Cnpj;
 
         return new Document(value, type);
     }
@@ -30,8 +30,8 @@ public class Document : ValueObject
 
         var typeResult = clean.Length switch
         {
-            11 => Result.Ok(EDocumentType.CPF),
-            14 => Result.Ok(EDocumentType.CNPJ),
+            11 => Result.Ok(EDocumentType.Cpf),
+            14 => Result.Ok(EDocumentType.Cnpj),
             _ => Result.Fail<EDocumentType>("Document must have 11 (CPF) or 14 (CNPJ) digits.")
         };
 
@@ -40,7 +40,7 @@ public class Document : ValueObject
 
         var type = typeResult.Value;
 
-        var isValid = type == EDocumentType.CPF
+        var isValid = type == EDocumentType.Cpf
             ? Cpf.IsValid(clean)
             : Cnpj.IsValid(clean);
 

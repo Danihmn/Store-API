@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
+using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Store.Api.Extensions.Endpoints;
 using Authenticate = Store.Application.UseCases.User.Authenticate;
 using Create = Store.Application.UseCases.User.Create;
@@ -22,15 +24,27 @@ public static class UserEndpoints
             });
 
         group.MapPost("authenticate", async
-            (ISender sender, CancellationToken cancellationToken, Authenticate.Command command) =>
+        (ISender sender, CancellationToken cancellationToken, Authenticate.Command command,
+            IValidator<Authenticate.Command> validator) =>
         {
+            var validation = await validator.ValidateAsync(command, cancellationToken);
+
+            if (!validation.IsValid)
+                return Results.BadRequest(validation.ToDictionary());
+
             var result = await sender.Send(command, cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.Unauthorized();
         });
 
         group.MapPost("",
-            async (ISender sender, CancellationToken cancellationToken, Create.Command command) =>
+            async (ISender sender, CancellationToken cancellationToken, Create.Command command,
+                IValidator<Create.Command> validator) =>
             {
+                var validation = await validator.ValidateAsync(command, cancellationToken);
+
+                if (!validation.IsValid)
+                    return Results.BadRequest(validation.ToDictionary());
+
                 var result = await sender.Send(command, cancellationToken);
 
                 return result.IsSuccess
@@ -39,6 +53,6 @@ public static class UserEndpoints
                     {
                         errors = result.Errors.Select(error => error.Message),
                     });
-            }).RequireAuthorization("admin", "seller");
+            }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin,seller" });
     }
 }
