@@ -22,14 +22,14 @@ internal class ProductRepository(StoreContext context) : IProductRepository
 
     public async Task<Product> CreateAsync(Product entity, CancellationToken cancellationToken = default)
     {
-        await context.AddAsync(entity, cancellationToken);
+        context.Add(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
     public async Task<Product> UpdateAsync(Product entity, CancellationToken cancellationToken = default)
     {
-        context.Products.Update(entity);
+        context.Update(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
@@ -39,7 +39,7 @@ internal class ProductRepository(StoreContext context) : IProductRepository
         var product = await context.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
                       ?? throw new KeyNotFoundException("Product not found");
 
-        context.Products.Remove(product);
+        context.Remove(product);
         await context.SaveChangesAsync(cancellationToken);
     }
 }

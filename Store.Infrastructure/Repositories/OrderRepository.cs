@@ -22,14 +22,14 @@ internal class OrderRepository(StoreContext context) : IOrderRepository
 
     public async Task<Order> CreateAsync(Order entity, CancellationToken cancellationToken = default)
     {
-        await context.AddAsync(entity, cancellationToken);
+        context.Add(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
     public async Task<Order> UpdateAsync(Order entity, CancellationToken cancellationToken = default)
     {
-        context.Orders.Update(entity);
+        context.Update(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
@@ -39,7 +39,7 @@ internal class OrderRepository(StoreContext context) : IOrderRepository
         var order = await context.Orders.FirstOrDefaultAsync(o => o.Id == id, cancellationToken)
                     ?? throw new KeyNotFoundException("Order not found");
 
-        context.Orders.Remove(order);
+        context.Remove(order);
         await context.SaveChangesAsync(cancellationToken);
     }
 }

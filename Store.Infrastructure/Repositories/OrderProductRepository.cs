@@ -15,7 +15,7 @@ internal class OrderProductRepository(StoreContext context) : IOrderProductRepos
             .Take(take)
             .ToListAsync(cancellationToken);
 
-    public async Task<OrderProduct?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public Task<OrderProduct?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => throw new NotSupportedException("OrderProduct uses composite key. Use GetByCompositeKeyAsync.");
 
     public async Task<IEnumerable<OrderProduct>?> GetByOrderIdAsync
@@ -33,14 +33,14 @@ internal class OrderProductRepository(StoreContext context) : IOrderProductRepos
 
     public async Task<OrderProduct> CreateAsync(OrderProduct entity, CancellationToken cancellationToken = default)
     {
-        await context.AddAsync(entity, cancellationToken);
+        context.Add(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
     public async Task<OrderProduct> UpdateAsync(OrderProduct entity, CancellationToken cancellationToken = default)
     {
-        context.OrderProducts.Update(entity);
+        context.Update(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
@@ -64,7 +64,7 @@ internal class OrderProductRepository(StoreContext context) : IOrderProductRepos
                        .FirstOrDefaultAsync(op => op.OrderId == orderId && op.ProductId == productId, cancellationToken)
                    ?? throw new KeyNotFoundException("Order product not found");
 
-        context.OrderProducts.Remove(item);
+        context.Remove(item);
         await context.SaveChangesAsync(cancellationToken);
     }
 }

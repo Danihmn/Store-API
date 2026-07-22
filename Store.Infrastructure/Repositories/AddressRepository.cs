@@ -22,7 +22,7 @@ internal class AddressRepository(StoreContext context) : IAddressRepository
 
     public async Task<Address> CreateAsync(Address entity, CancellationToken cancellationToken = default)
     {
-        await context.AddAsync(entity, cancellationToken);
+        context.Add(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }

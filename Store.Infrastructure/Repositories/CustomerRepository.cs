@@ -22,7 +22,7 @@ internal class CustomerRepository(StoreContext context) : ICustomerRepository
 
     public async Task<Customer> CreateAsync(Customer entity, CancellationToken cancellationToken = default)
     {
-        await context.AddAsync(entity, cancellationToken);
+        context.Add(entity);
         await context.SaveChangesAsync(cancellationToken);
 
         return entity;
@@ -30,10 +30,7 @@ internal class CustomerRepository(StoreContext context) : ICustomerRepository
 
     public async Task<Customer> UpdateAsync(Customer entity, CancellationToken cancellationToken = default)
     {
-        var customer = context.Customers.FirstOrDefault(c => c.Id == entity.Id)
-                       ?? throw new KeyNotFoundException("Customer not found");
-
-        await context.AddAsync(customer, cancellationToken);
+        context.Update(entity);
         await context.SaveChangesAsync(cancellationToken);
 
         return entity;
@@ -41,7 +38,7 @@ internal class CustomerRepository(StoreContext context) : ICustomerRepository
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var customer = context.Customers.FirstOrDefault(c => c.Id == id)
+        var customer = await context.Customers.FirstOrDefaultAsync(c => c.Id == id, cancellationToken)
                        ?? throw new KeyNotFoundException("Customer not found");
 
         context.Customers.Remove(customer);
