@@ -127,7 +127,20 @@ Listagens (`GetAll`) suportam paginação via query string `skip` e `take` (padr
 | EmailValidation | Validação de e-mail |
 | libphonenumber-csharp | Validação de telefone |
 | Scalar | Interface OpenAPI |
+| Serilog | Logging estruturado (console + arquivo) |
 | MSTest + Moq | Testes unitários |
+
+## Logs
+
+Logging estruturado via **Serilog**.
+
+- **Sinks:** Console e arquivo (`logs/app-.log`, rotação diária, retenção de 7 dias)
+- **Enrichers:** `FromLogContext`, `WithMachineName`, `WithEnvironmentName`, `WithThreadId`
+- **Request logging:** `UseSerilogRequestLogging` registra método, path, status code e tempo de resposta de cada requisição
+- **`LogUsernameMiddleware`** — injeta o nome do usuário autenticado (claim `name`) no `LogContext`, associando os logs da requisição ao usuário que a originou
+- **Handlers** — todos os handlers de `Store.Application` (`ILogger<Handler>`) logam entrada, falhas de validação/não encontrado (`LogWarning`) e conclusão com sucesso (`LogInformation`), usando placeholders estruturados (ex.: `{Id}`, `{Email}`) em vez de interpolação direta
+
+Configuração em `appsettings.json`, seção `Serilog`.
 
 ## Testes
 
