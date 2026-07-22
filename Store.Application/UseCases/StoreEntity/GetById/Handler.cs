@@ -1,17 +1,25 @@
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.StoreEntity.GetById;
 
-public sealed class Handler (IStoreRepository repository) : IRequestHandler<Command, Result<Response>>
+public sealed class Handler (IStoreRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result<Response>>
 {
     public async Task<Result<Response>> Handle (Command request, CancellationToken cancellationToken)
     {
+        logger.LogInformation("Looking up store {Id}", request.Id);
+
         var store = await repository.GetByIdAsync(request.Id, cancellationToken);
 
         if (store is null)
+        {
+            logger.LogWarning("Store {Id} was not found", request.Id);
             return Result.Fail<Response>("Store not found");
+        }
+
+        logger.LogInformation("Retrieved store {Id}", request.Id);
 
         return Result.Ok(new Response(
             Id: store.Id,

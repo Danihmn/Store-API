@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.Product.Delete;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Product;
 public class DeleteHandlerTests
 {
     private readonly Mock<IProductRepository> _productRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldDeleteWhenFoundProduct()
@@ -21,7 +23,7 @@ public class DeleteHandlerTests
         _productRepository.Setup(repository =>
             repository.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
-        var handler = new Handler(_productRepository.Object);
+        var handler = new Handler(_productRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(productId), CancellationToken.None);
 
         Assert.IsTrue(result.IsSuccess);
@@ -38,7 +40,7 @@ public class DeleteHandlerTests
                 repository.GetByIdAsync(productId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Product?)null);
 
-        var handler = new Handler(_productRepository.Object);
+        var handler = new Handler(_productRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(productId), CancellationToken.None);
 
         Assert.IsTrue(result.IsFailed);

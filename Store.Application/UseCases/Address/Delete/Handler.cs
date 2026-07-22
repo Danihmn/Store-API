@@ -1,19 +1,27 @@
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Address.Delete;
 
-public sealed class Handler (IAddressRepository repository) : IRequestHandler<Command, Result>
+public sealed class Handler (IAddressRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result>
 {
     public async Task<Result> Handle (Command request, CancellationToken cancellationToken)
     {
+        logger.LogInformation("Received request to delete address {AddressId}", request.Id);
+
         var address = await repository.GetByIdAsync(request.Id, cancellationToken);
 
         if (address is null)
+        {
+            logger.LogWarning("Cannot delete address {AddressId} because it was not found", request.Id);
             return Result.Fail("Address not found");
+        }
 
         await repository.DeleteAsync(request.Id, cancellationToken);
+
+        logger.LogInformation("Address {AddressId} deleted successfully", request.Id);
 
         return Result.Ok();
     }

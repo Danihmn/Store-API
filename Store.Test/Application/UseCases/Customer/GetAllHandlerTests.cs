@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.Customer.GetAll;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Customer;
 public class GetAllHandlerTests
 {
     private readonly Mock<ICustomerRepository> _customerRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldReturnCustomers_WhenCustomersExist()
@@ -19,7 +21,7 @@ public class GetAllHandlerTests
                 repository.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([customer]);
 
-        var handler = new Handler(_customerRepository.Object);
+        var handler = new Handler(_customerRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(), CancellationToken.None);
 
         Assert.IsTrue(result.IsSuccess);
@@ -33,7 +35,7 @@ public class GetAllHandlerTests
                 repository.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((IEnumerable<Store.Domain.Entities.Customer>?)null);
 
-        var handler = new Handler(_customerRepository.Object);
+        var handler = new Handler(_customerRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(), CancellationToken.None);
 
         Assert.IsTrue(result.IsFailed);

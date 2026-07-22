@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.Product.Update;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Product;
 public class UpdateHandlerTests
 {
     private readonly Mock<IProductRepository> _productRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldUpdateProduct_WhenFoundAndValidData()
@@ -22,7 +24,7 @@ public class UpdateHandlerTests
                 repository.UpdateAsync(It.IsAny<Store.Domain.Entities.Product>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Product p, CancellationToken _) => p);
 
-        var handler = new Handler(_productRepository.Object);
+        var handler = new Handler(_productRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(productId, "Notebook Pro", 4200.00m, 5), CancellationToken.None);
 
         Assert.IsTrue(result.IsSuccess);
@@ -40,7 +42,7 @@ public class UpdateHandlerTests
                 repository.GetByIdAsync(productId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Product?)null);
 
-        var handler = new Handler(_productRepository.Object);
+        var handler = new Handler(_productRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(productId, "Notebook Pro", 4200.00m, 5), CancellationToken.None);
 
         Assert.IsTrue(result.IsFailed);

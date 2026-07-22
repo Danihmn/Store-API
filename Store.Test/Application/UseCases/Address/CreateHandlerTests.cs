@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.Address.Create;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Address;
 public class CreateHandlerTests
 {
     private readonly Mock<IAddressRepository> _addressRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldCreateAddress_WhenValidData()
@@ -16,7 +18,7 @@ public class CreateHandlerTests
                 repository.CreateAsync(It.IsAny<Store.Domain.Entities.Address>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Address address, CancellationToken _) => address);
 
-        var handler = new Handler(_addressRepository.Object);
+        var handler = new Handler(_addressRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command("Rua das Flores", "Sao Paulo", "SP", "12345678"), CancellationToken.None);
 
@@ -33,7 +35,7 @@ public class CreateHandlerTests
                 repository.CreateAsync(It.IsAny<Store.Domain.Entities.Address>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Address address, CancellationToken _) => address);
 
-        var handler = new Handler(_addressRepository.Object);
+        var handler = new Handler(_addressRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command("Rua das Flores", "Sao Paulo", "SP", "invalid"), CancellationToken.None);
 

@@ -1,19 +1,27 @@
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Order.Create;
 
-public sealed class Handler (IOrderRepository repository) : IRequestHandler<Command, Result<Response>>
+public sealed class Handler (IOrderRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result<Response>>
 {
     public async Task<Result<Response>> Handle (Command request, CancellationToken cancellationToken)
     {
+        logger.LogInformation("Starting to create order for customer {CustomerId}", request.CustomerId);
+
         var orderResult = Store.Domain.Entities.Order.Create("pending", request.Total, request.CustomerId, request.AddressId);
 
         if (orderResult.IsFailed)
+        {
+            logger.LogWarning("Failed to create order for customer {CustomerId}", request.CustomerId);
             return Result.Fail<Response>(orderResult.Errors);
+        }
 
         var created = await repository.CreateAsync(orderResult.Value, cancellationToken);
+
+        logger.LogInformation("Created order {OrderId} for customer {CustomerId}", created.Id, created.CustomerId);
 
         return Result.Ok(new Response(
             Id: created.Id,

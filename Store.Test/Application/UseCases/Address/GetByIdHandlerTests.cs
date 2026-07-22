@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.Address.GetById;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Address;
 public class GetByIdHandlerTests
 {
     private readonly Mock<IAddressRepository> _addressRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldReturnAddress_WhenFound()
@@ -19,7 +21,7 @@ public class GetByIdHandlerTests
                 repository.GetByIdAsync(addressId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(address);
 
-        var handler = new Handler(_addressRepository.Object);
+        var handler = new Handler(_addressRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(addressId), CancellationToken.None);
 
         Assert.IsTrue(result.IsSuccess);
@@ -34,7 +36,7 @@ public class GetByIdHandlerTests
                 repository.GetByIdAsync(addressId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Address?)null);
 
-        var handler = new Handler(_addressRepository.Object);
+        var handler = new Handler(_addressRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(addressId), CancellationToken.None);
 
         Assert.IsTrue(result.IsFailed);

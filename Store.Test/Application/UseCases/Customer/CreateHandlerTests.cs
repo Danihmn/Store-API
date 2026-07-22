@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using Store.Application.UseCases.Customer.Create;
 using Store.Domain.Repositories;
 
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Customer;
 public class CreateHandlerTests
 {
     private readonly Mock<ICustomerRepository> _customerRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShoudCreateCustomer_WhenValidData()
@@ -16,7 +18,7 @@ public class CreateHandlerTests
                 repository.CreateAsync(It.IsAny<Store.Domain.Entities.Customer>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Customer customer, CancellationToken _) => customer);
 
-        var handler = new Handler(_customerRepository.Object);
+        var handler = new Handler(_customerRepository.Object, _logger.Object);
         var result =
             await handler.Handle(new Command("Daniel Eduardo", "daniel.bezerra.mult@outlook.com", "+5519993054611"),
                 CancellationToken.None);
@@ -35,7 +37,7 @@ public class CreateHandlerTests
                 repository.CreateAsync(It.IsAny<Store.Domain.Entities.Customer>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Customer customer, CancellationToken _) => customer);
 
-        var handler = new Handler(_customerRepository.Object);
+        var handler = new Handler(_customerRepository.Object, _logger.Object);
         var result =
             await handler.Handle(new Command("Daniel Eduardo", "daniel.bezerra.mult", "5519993054611"),
                 CancellationToken.None);

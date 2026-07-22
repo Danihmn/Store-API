@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.Order.Delete;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Order;
 public class DeleteHandlerTests
 {
     private readonly Mock<IOrderRepository> _orderRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldDeleteWhenFoundOrder()
@@ -21,7 +23,7 @@ public class DeleteHandlerTests
         _orderRepository.Setup(repository =>
             repository.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
-        var handler = new Handler(_orderRepository.Object);
+        var handler = new Handler(_orderRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(orderId), CancellationToken.None);
 
         Assert.IsTrue(result.IsSuccess);
@@ -38,7 +40,7 @@ public class DeleteHandlerTests
                 repository.GetByIdAsync(orderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Order?)null);
 
-        var handler = new Handler(_orderRepository.Object);
+        var handler = new Handler(_orderRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(orderId), CancellationToken.None);
 
         Assert.IsTrue(result.IsFailed);

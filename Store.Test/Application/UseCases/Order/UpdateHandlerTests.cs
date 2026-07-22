@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.Order.Update;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Order;
 public class UpdateHandlerTests
 {
     private readonly Mock<IOrderRepository> _orderRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldUpdateOrder_WhenFoundAndValidData()
@@ -24,7 +26,7 @@ public class UpdateHandlerTests
                 repository.UpdateAsync(It.IsAny<Store.Domain.Entities.Order>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Order o, CancellationToken _) => o);
 
-        var handler = new Handler(_orderRepository.Object);
+        var handler = new Handler(_orderRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command(orderId, "paid", 200.00m, customerId, addressId), CancellationToken.None);
 
@@ -45,7 +47,7 @@ public class UpdateHandlerTests
                 repository.GetByIdAsync(orderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Order?)null);
 
-        var handler = new Handler(_orderRepository.Object);
+        var handler = new Handler(_orderRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command(orderId, "paid", 200.00m, customerId, addressId), CancellationToken.None);
 

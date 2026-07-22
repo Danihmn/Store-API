@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.User.Authenticate;
 using Store.Domain.Repositories;
@@ -11,6 +12,7 @@ public class AuthenticateHandlerTests
 {
     private readonly Mock<IUserRepository> _userRepository = new();
     private readonly Mock<ITokenService> _tokenService = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldAuthenticate_WhenCredentialsAreValid()
@@ -24,7 +26,7 @@ public class AuthenticateHandlerTests
             .ReturnsAsync(user);
         _tokenService.Setup(service => service.GenerateToken(user)).Returns("fake-jwt-token");
 
-        var handler = new Handler(_userRepository.Object, _tokenService.Object);
+        var handler = new Handler(_userRepository.Object, _tokenService.Object, _logger.Object);
         var result = await handler.Handle(new Command("daniel.bezerra.mult@outlook.com", "P@ssw0rd123"),
             CancellationToken.None);
 
@@ -43,7 +45,7 @@ public class AuthenticateHandlerTests
                 repository.GetByEmailAsync("daniel.bezerra.mult@outlook.com", It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
-        var handler = new Handler(_userRepository.Object, _tokenService.Object);
+        var handler = new Handler(_userRepository.Object, _tokenService.Object, _logger.Object);
         var result = await handler.Handle(new Command("daniel.bezerra.mult@outlook.com", "WrongPassword"),
             CancellationToken.None);
 

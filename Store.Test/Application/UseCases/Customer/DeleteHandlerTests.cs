@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using Store.Application.UseCases.Customer.Delete;
 using Store.Domain.Repositories;
 
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Customer;
 public class DeleteHandlerTests
 {
     private readonly Mock<ICustomerRepository> _customerRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldDeleteWhenFoundCustomer()
@@ -22,7 +24,7 @@ public class DeleteHandlerTests
         _customerRepository.Setup(repository =>
             repository.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
-        var handler = new Handler(_customerRepository.Object);
+        var handler = new Handler(_customerRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(customerId), CancellationToken.None);
 
         Assert.IsTrue(result.IsSuccess);
@@ -39,7 +41,7 @@ public class DeleteHandlerTests
                 repository.GetByIdAsync(customerId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Customer?)null);
 
-        var handler = new Handler(_customerRepository.Object);
+        var handler = new Handler(_customerRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(customerId), CancellationToken.None);
 
         Assert.IsTrue(result.IsFailed);

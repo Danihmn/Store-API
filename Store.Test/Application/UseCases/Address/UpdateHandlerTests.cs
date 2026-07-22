@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.Address.Update;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Address;
 public class UpdateHandlerTests
 {
     private readonly Mock<IAddressRepository> _addressRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldUpdateAddress_WhenFoundAndValidData()
@@ -22,7 +24,7 @@ public class UpdateHandlerTests
                 repository.UpdateAsync(It.IsAny<Store.Domain.Entities.Address>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Address a, CancellationToken _) => a);
 
-        var handler = new Handler(_addressRepository.Object);
+        var handler = new Handler(_addressRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command(addressId, "Rua das Palmeiras", "Rio de Janeiro", "RJ", "87654321"), CancellationToken.None);
 
@@ -41,7 +43,7 @@ public class UpdateHandlerTests
                 repository.GetByIdAsync(addressId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Address?)null);
 
-        var handler = new Handler(_addressRepository.Object);
+        var handler = new Handler(_addressRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command(addressId, "Rua das Palmeiras", "Rio de Janeiro", "RJ", "87654321"), CancellationToken.None);
 

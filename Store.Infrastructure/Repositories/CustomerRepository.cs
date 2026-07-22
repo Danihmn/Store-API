@@ -33,7 +33,7 @@ internal class CustomerRepository(StoreContext context) : ICustomerRepository
         var customer = context.Customers.FirstOrDefault(c => c.Id == entity.Id)
                        ?? throw new KeyNotFoundException("Customer not found");
 
-        await context.AddAsync(entity, cancellationToken);
+        await context.AddAsync(customer, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
         return entity;

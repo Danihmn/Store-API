@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.Order.GetAll;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Order;
 public class GetAllHandlerTests
 {
     private readonly Mock<IOrderRepository> _orderRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldReturnOrders_WhenOrdersExist()
@@ -18,7 +20,7 @@ public class GetAllHandlerTests
                 repository.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([order]);
 
-        var handler = new Handler(_orderRepository.Object);
+        var handler = new Handler(_orderRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(), CancellationToken.None);
 
         Assert.IsTrue(result.IsSuccess);
@@ -32,7 +34,7 @@ public class GetAllHandlerTests
                 repository.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((IEnumerable<Store.Domain.Entities.Order>?)null);
 
-        var handler = new Handler(_orderRepository.Object);
+        var handler = new Handler(_orderRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(), CancellationToken.None);
 
         Assert.IsTrue(result.IsFailed);

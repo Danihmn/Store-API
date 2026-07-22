@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.User.Create;
 using Store.Domain.Repositories;
@@ -10,6 +11,7 @@ public class CreateHandlerTests
 {
     private readonly Mock<IUserRepository> _userRepository = new();
     private readonly Mock<ITokenService> _tokenService = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldCreateUser_WhenEmailNotInUse()
@@ -23,7 +25,7 @@ public class CreateHandlerTests
         _tokenService.Setup(service => service.GenerateToken(It.IsAny<Store.Domain.Entities.User>()))
             .Returns("fake-jwt-token");
 
-        var handler = new Handler(_userRepository.Object, _tokenService.Object);
+        var handler = new Handler(_userRepository.Object, _tokenService.Object, _logger.Object);
         var result = await handler.Handle(
             new Command("Daniel Eduardo", "daniel.bezerra.mult@outlook.com", "P@ssw0rd123", true, "admin"),
             CancellationToken.None);
@@ -44,7 +46,7 @@ public class CreateHandlerTests
                 repository.GetByEmailAsync("daniel.bezerra.mult@outlook.com", It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingUser);
 
-        var handler = new Handler(_userRepository.Object, _tokenService.Object);
+        var handler = new Handler(_userRepository.Object, _tokenService.Object, _logger.Object);
         var result = await handler.Handle(
             new Command("Daniel Eduardo", "daniel.bezerra.mult@outlook.com", "P@ssw0rd123", true, "admin"),
             CancellationToken.None);

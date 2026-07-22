@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.OrderProduct.Create;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.OrderProduct;
 public class CreateHandlerTests
 {
     private readonly Mock<IOrderProductRepository> _orderProductRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldCreateOrderProduct_WhenValidData()
@@ -17,7 +19,7 @@ public class CreateHandlerTests
                     It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.OrderProduct item, CancellationToken _) => item);
 
-        var handler = new Handler(_orderProductRepository.Object);
+        var handler = new Handler(_orderProductRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(Guid.NewGuid(), Guid.NewGuid(), 2), CancellationToken.None);
 
         Assert.IsTrue(result.IsSuccess);
@@ -34,7 +36,7 @@ public class CreateHandlerTests
                     It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.OrderProduct item, CancellationToken _) => item);
 
-        var handler = new Handler(_orderProductRepository.Object);
+        var handler = new Handler(_orderProductRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(Guid.NewGuid(), Guid.NewGuid(), 0), CancellationToken.None);
 
         Assert.IsTrue(result.IsFailed);

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.Customer.Update;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Customer;
 public class UpdateHandlerTests
 {
     private readonly Mock<ICustomerRepository> _customerRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldUpdateCustomer_WhenFoundAndValidData()
@@ -23,7 +25,7 @@ public class UpdateHandlerTests
                 repository.UpdateAsync(It.IsAny<Store.Domain.Entities.Customer>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Customer c, CancellationToken _) => c);
 
-        var handler = new Handler(_customerRepository.Object);
+        var handler = new Handler(_customerRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command(customerId, "Daniel Bezerra", "daniel.bezerra.mult@outlook.com", "+5519993054611"),
             CancellationToken.None);
@@ -43,7 +45,7 @@ public class UpdateHandlerTests
                 repository.GetByIdAsync(customerId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Customer?)null);
 
-        var handler = new Handler(_customerRepository.Object);
+        var handler = new Handler(_customerRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command(customerId, "Daniel Bezerra", "daniel.bezerra.mult@outlook.com", "+5519993054611"),
             CancellationToken.None);

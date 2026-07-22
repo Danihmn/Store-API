@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.StoreEntity.Update;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.StoreEntity;
 public class UpdateHandlerTests
 {
     private readonly Mock<IStoreRepository> _storeRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldUpdateStore_WhenFoundAndValidData()
@@ -24,7 +26,7 @@ public class UpdateHandlerTests
                 repository.UpdateAsync(It.IsAny<Store.Domain.Entities.Store>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Store s, CancellationToken _) => s);
 
-        var handler = new Handler(_storeRepository.Object);
+        var handler = new Handler(_storeRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command(storeId, "Loja Central S.A.", "Loja Central", "11444777000161", true, addressId),
             CancellationToken.None);
@@ -45,7 +47,7 @@ public class UpdateHandlerTests
                 repository.GetByIdAsync(storeId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Store?)null);
 
-        var handler = new Handler(_storeRepository.Object);
+        var handler = new Handler(_storeRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command(storeId, "Loja Central S.A.", "Loja Central", "11444777000161", true, addressId),
             CancellationToken.None);

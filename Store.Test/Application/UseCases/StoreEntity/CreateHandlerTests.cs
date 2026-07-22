@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.StoreEntity.Create;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.StoreEntity;
 public class CreateHandlerTests
 {
     private readonly Mock<IStoreRepository> _storeRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldCreateStore_WhenValidData()
@@ -16,7 +18,7 @@ public class CreateHandlerTests
                 repository.CreateAsync(It.IsAny<Store.Domain.Entities.Store>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Store store, CancellationToken _) => store);
 
-        var handler = new Handler(_storeRepository.Object);
+        var handler = new Handler(_storeRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command("Loja Central Ltda", "Loja Central", "11444777000161", true, Guid.NewGuid()),
             CancellationToken.None);
@@ -34,7 +36,7 @@ public class CreateHandlerTests
                 repository.CreateAsync(It.IsAny<Store.Domain.Entities.Store>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Store store, CancellationToken _) => store);
 
-        var handler = new Handler(_storeRepository.Object);
+        var handler = new Handler(_storeRepository.Object, _logger.Object);
         var result = await handler.Handle(
             new Command("Loja Central Ltda", "Loja Central", "invalid", true, Guid.NewGuid()),
             CancellationToken.None);

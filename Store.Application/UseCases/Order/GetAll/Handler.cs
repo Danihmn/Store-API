@@ -1,17 +1,23 @@
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Order.GetAll;
 
-public sealed class Handler (IOrderRepository repository) : IRequestHandler<Command, Result<IEnumerable<Response>>>
+public sealed class Handler (IOrderRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result<IEnumerable<Response>>>
 {
     public async Task<Result<IEnumerable<Response>>> Handle (Command request, CancellationToken cancellationToken)
     {
+        logger.LogInformation("Fetching orders with Skip {Skip} and Take {Take}", request.Skip, request.Take);
+
         var orders = await repository.GetAllAsync(request.Skip, request.Take, cancellationToken);
 
         if (orders is null || !orders.Any())
+        {
+            logger.LogWarning("No orders found for Skip {Skip} and Take {Take}", request.Skip, request.Take);
             return Result.Fail<IEnumerable<Response>>("No orders found");
+        }
 
         var responses = orders.Select(order => new Response(
             Id: order.Id,
@@ -21,6 +27,8 @@ public sealed class Handler (IOrderRepository repository) : IRequestHandler<Comm
             Total: order.Total.Value,
             CustomerId: order.CustomerId,
             AddressId: order.AddressId));
+
+        logger.LogInformation("Retrieved {Count} orders", responses.Count());
 
         return Result.Ok(responses);
     }

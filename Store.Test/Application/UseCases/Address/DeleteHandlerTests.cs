@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Store.Application.UseCases.Address.Delete;
 using Store.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Store.Test.Application.UseCases.Address;
 public class DeleteHandlerTests
 {
     private readonly Mock<IAddressRepository> _addressRepository = new();
+    private readonly Mock<ILogger<Handler>> _logger = new();
 
     [TestMethod]
     public async Task Handle_ShouldDeleteWhenFoundAddress()
@@ -21,7 +23,7 @@ public class DeleteHandlerTests
         _addressRepository.Setup(repository =>
             repository.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
-        var handler = new Handler(_addressRepository.Object);
+        var handler = new Handler(_addressRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(addressId), CancellationToken.None);
 
         Assert.IsTrue(result.IsSuccess);
@@ -38,7 +40,7 @@ public class DeleteHandlerTests
                 repository.GetByIdAsync(addressId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Store.Domain.Entities.Address?)null);
 
-        var handler = new Handler(_addressRepository.Object);
+        var handler = new Handler(_addressRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(addressId), CancellationToken.None);
 
         Assert.IsTrue(result.IsFailed);
