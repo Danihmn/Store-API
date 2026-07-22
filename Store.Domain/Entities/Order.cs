@@ -26,8 +26,8 @@ public class Order : Entity
     {
         var errors = new List<IError>();
 
-        errors.NotEmpty(customerId, "InvalidCustomerId", "CustomerId cannot be empty");
-        errors.NotEmpty(addressId, "InvalidAddressId", "AddressId cannot be empty");
+        errors.NotEmpty(customerId, "CustomerId cannot be empty");
+        errors.NotEmpty(addressId, "AddressId cannot be empty");
 
         var statusResult = Status.Create(status);
         statusResult.AddErrorsTo(errors);
@@ -43,8 +43,8 @@ public class Order : Entity
     public Result UpdateOrder(string? status = null, decimal? total = null)
     {
         var errors = new List<IError>();
-        Status newStatus = Status;
-        Currency newTotal = Total;
+        var newStatus = Status;
+        var newTotal = Total;
 
         if (status != null)
         {

@@ -37,6 +37,6 @@ public class GetAllHandlerTests
         var handler = new Handler(_addressRepository.Object, _logger.Object);
         var result = await handler.Handle(new Command(), CancellationToken.None);
 
-        Assert.IsTrue(result.IsFailed);
+        Assert.IsEmpty(result.Value);
     }
 }

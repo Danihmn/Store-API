@@ -24,7 +24,7 @@ public class Customer : Entity
     {
         var errors = new List<IError>();
 
-        errors.NotEmpty(name, "InvalidName", "Name cannot be empty");
+        errors.NotEmpty(name, "Name cannot be empty");
 
         var emailResult = Email.Create(email);
         var phoneResult = Phone.Create(phone);
@@ -60,7 +60,7 @@ public class Customer : Entity
             phoneValue = phoneResult.IsFailed ? null : phoneResult.Value;
         }
 
-        errors.NotEmptyIfProvided(name, "InvalidName", "Name cannot be empty");
+        errors.NotEmptyIfProvided(name, "Name cannot be empty");
 
         if (errors.Count > 0) return Result.Fail(errors);
 

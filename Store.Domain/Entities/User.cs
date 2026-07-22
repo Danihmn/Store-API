@@ -28,8 +28,8 @@ public class User : Entity
     {
         var errors = new List<IError>();
 
-        errors.NotEmpty(name, "InvalidName", "Name cannot be empty");
-        errors.NotEmpty(hashedPassword, "InvalidPassword", "Password cannot be empty");
+        errors.NotEmpty(name, "Name cannot be empty");
+        errors.NotEmpty(hashedPassword, "Password cannot be empty");
 
         var emailResult = Email.Create(email);
         var roleResult = Role.Create(role);
@@ -66,8 +66,8 @@ public class User : Entity
             roleValue = roleResult.IsFailed ? null : roleResult.Value;
         }
 
-        errors.NotEmptyIfProvided(name, "InvalidName", "Name cannot be empty");
-        errors.NotEmptyIfProvided(hashedPassword, "InvalidPassword", "Password cannot be empty");
+        errors.NotEmptyIfProvided(name, "Name cannot be empty");
+        errors.NotEmptyIfProvided(hashedPassword, "Password cannot be empty");
 
         if (errors.Count > 0) return Result.Fail(errors);
 

@@ -29,8 +29,8 @@ public class Store : Entity
     {
         var errors = new List<IError>();
 
-        errors.NotEmpty(legalName, "InvalidLegalName", "LegalName cannot be empty");
-        errors.NotEmpty(addressId, "InvalidAddressId", "AddressId cannot be empty");
+        errors.NotEmpty(legalName, "LegalName cannot be empty");
+        errors.NotEmpty(addressId, "AddressId cannot be empty");
 
         var cnpjResult = Document.Create(cnpj);
 
@@ -47,8 +47,8 @@ public class Store : Entity
         var errors = new List<IError>();
         Document newCnpj = Cnpj;
 
-        errors.NotEmptyIfProvided(legalName, "InvalidLegalName", "LegalName cannot be empty");
-        errors.NotEmptyIfProvided(addressId, "InvalidAddressId", "AddressId cannot be empty");
+        errors.NotEmptyIfProvided(legalName, "LegalName cannot be empty");
+        errors.NotEmpty(addressId, "AddressId cannot be empty");
 
         if (cnpj != null)
         {

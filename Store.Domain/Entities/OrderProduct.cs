@@ -20,9 +20,9 @@ public class OrderProduct
     {
         var errors = new List<IError>();
 
-        errors.NotEmpty(orderId, "InvalidOrderId", "OrderId cannot be empty");
-        errors.NotEmpty(productId, "InvalidProductId", "ProductId cannot be empty");
-        errors.GreaterThanZero(quantity, "InvalidQuantity", "Quantity must be greater than 0");
+        errors.NotEmpty(orderId, "OrderId cannot be empty");
+        errors.NotEmpty(productId, "ProductId cannot be empty");
+        errors.GreaterThanZero(quantity, "Quantity must be greater than 0");
 
         return errors.Count > 0
             ? Result.Fail<OrderProduct>(errors)
@@ -33,7 +33,7 @@ public class OrderProduct
     {
         var errors = new List<IError>();
 
-        errors.GreaterThanZero(quantity, "InvalidQuantity", "Quantity must be greater than 0");
+        errors.GreaterThanZero(quantity, "Quantity must be greater than 0");
 
         if (errors.Count > 0) return Result.Fail(errors);
 
