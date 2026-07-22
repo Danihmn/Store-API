@@ -13,12 +13,6 @@ public sealed class Handler (IAddressRepository repository, ILogger<Handler> log
 
         var addresses = await repository.GetAllAsync(request.Skip, request.Take, cancellationToken);
 
-        if (addresses is null || !addresses.Any())
-        {
-            logger.LogWarning("No addresses found for Skip {Skip} and Take {Take}", request.Skip, request.Take);
-            return Result.Fail<IEnumerable<Response>>("No addresses found");
-        }
-
         var responses = addresses.Select(a => new Response(
             Id: a.Id,
             CreatedAt: a.CreatedAt,
