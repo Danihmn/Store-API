@@ -29,7 +29,7 @@ internal class AddressRepository(StoreContext context) : IAddressRepository
 
     public async Task<Address> UpdateAsync(Address entity, CancellationToken cancellationToken = default)
     {
-        context.Addresses.Update(entity);
+        context.Update(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
@@ -39,7 +39,7 @@ internal class AddressRepository(StoreContext context) : IAddressRepository
         var address = await context.Addresses.FirstOrDefaultAsync(a => a.Id == id, cancellationToken)
                       ?? throw new KeyNotFoundException("Address not found");
 
-        context.Addresses.Remove(address);
+        context.Remove(address);
         await context.SaveChangesAsync(cancellationToken);
     }
 }

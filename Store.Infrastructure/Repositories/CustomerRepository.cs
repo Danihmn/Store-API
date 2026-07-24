@@ -41,7 +41,7 @@ internal class CustomerRepository(StoreContext context) : ICustomerRepository
         var customer = await context.Customers.FirstOrDefaultAsync(c => c.Id == id, cancellationToken)
                        ?? throw new KeyNotFoundException("Customer not found");
 
-        context.Customers.Remove(customer);
+        context.Remove(customer);
         await context.SaveChangesAsync(cancellationToken);
     }
 }
