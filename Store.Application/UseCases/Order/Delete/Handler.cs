@@ -5,9 +5,9 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Order.Delete;
 
-public sealed class Handler (IOrderRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result>
+public sealed class Handler(IOrderRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result>
 {
-    public async Task<Result> Handle (Command request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Attempting to delete order {OrderId}", request.Id);
 

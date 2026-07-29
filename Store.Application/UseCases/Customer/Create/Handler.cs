@@ -20,16 +20,16 @@ public sealed class Handler(ICustomerRepository repository, ILogger<Handler> log
             return Result.Fail<Response>(customer.Errors);
         }
 
-        await repository.CreateAsync(customer.Value, cancellationToken);
+        var result = await repository.CreateAsync(customer.Value, cancellationToken);
 
         logger.LogInformation("Created customer {Id}", customer.Value.Id);
 
         return Result.Ok(new Response(
-            Id: customer.Value.Id,
-            CreatedAt: customer.Value.CreatedAt,
-            UpdatedAt: customer.Value.UpdatedAt,
-            Name: customer.Value.Name,
-            Email: customer.Value.Email.Value,
-            Phone: customer.Value.Phone.Value));
+            Id: result.Id,
+            CreatedAt: result.CreatedAt,
+            UpdatedAt: result.UpdatedAt,
+            Name: result.Name,
+            Email: result.Email.Value,
+            Phone: result.Phone.Value));
     }
 }

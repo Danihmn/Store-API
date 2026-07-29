@@ -5,13 +5,14 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Product.Create;
 
-public sealed class Handler (IProductRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result<Response>>
+public sealed class Handler(IProductRepository repository, ILogger<Handler> logger)
+    : IRequestHandler<Command, Result<Response>>
 {
-    public async Task<Result<Response>> Handle (Command request, CancellationToken cancellationToken)
+    public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting to create product {Description}", request.Description);
 
-        var productResult = Store.Domain.Entities.Product.Create(request.Description, request.UnitPrice, request.Stock);
+        var productResult = Domain.Entities.Product.Create(request.Description, request.UnitPrice, request.Stock);
 
         if (productResult.IsFailed)
         {

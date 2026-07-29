@@ -5,9 +5,10 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Order.GetById;
 
-public sealed class Handler (IOrderRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result<Response>>
+public sealed class Handler(IOrderRepository repository, ILogger<Handler> logger)
+    : IRequestHandler<Command, Result<Response>>
 {
-    public async Task<Result<Response>> Handle (Command request, CancellationToken cancellationToken)
+    public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching order {OrderId}", request.Id);
 

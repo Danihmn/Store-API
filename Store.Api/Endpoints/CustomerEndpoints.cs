@@ -19,13 +19,13 @@ public static class CustomerEndpoints
         {
             var result = await sender.Send(new GetAll.Command(skip, take), cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin,seller" });
+        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
 
         group.MapGet("{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
             var result = await sender.Send(new GetById.Command(id), cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin,seller" });
+        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
 
         group.MapPost("", async
         (Create.Command command, ISender sender, IValidator<Create.Command> validator,
@@ -43,7 +43,7 @@ public static class CustomerEndpoints
                 {
                     errors = result.Errors.Select(error => error.Message),
                 });
-        }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin,seller" });
+        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
 
         group.MapPut("{id:Guid}", async
         (Guid id, Update.Command command, ISender sender, IValidator<Update.Command> validator,
@@ -57,12 +57,12 @@ public static class CustomerEndpoints
 
             var result = await sender.Send(updated, cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin,seller" });
+        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
 
         group.MapDelete("{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
             var result = await sender.Send(new Delete.Command(id), cancellationToken);
             return result.IsSuccess ? Results.NoContent() : Results.NotFound(result);
-        }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin" });
+        }).RequireAuthorization(policy => policy.RequireRole("admin"));
     }
 }

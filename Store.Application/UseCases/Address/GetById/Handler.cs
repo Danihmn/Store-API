@@ -5,9 +5,10 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Address.GetById;
 
-public sealed class Handler (IAddressRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result<Response>>
+public sealed class Handler(IAddressRepository repository, ILogger<Handler> logger)
+    : IRequestHandler<Command, Result<Response>>
 {
-    public async Task<Result<Response>> Handle (Command request, CancellationToken cancellationToken)
+    public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Looking up address {AddressId}", request.Id);
 

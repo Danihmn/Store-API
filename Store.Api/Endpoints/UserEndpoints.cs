@@ -53,6 +53,6 @@ public static class UserEndpoints
                     {
                         errors = result.Errors.Select(error => error.Message),
                     });
-            }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin,seller" });
+            }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
     }
 }

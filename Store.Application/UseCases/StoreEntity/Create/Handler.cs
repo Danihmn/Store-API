@@ -5,13 +5,14 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.StoreEntity.Create;
 
-public sealed class Handler (IStoreRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result<Response>>
+public sealed class Handler(IStoreRepository repository, ILogger<Handler> logger)
+    : IRequestHandler<Command, Result<Response>>
 {
-    public async Task<Result<Response>> Handle (Command request, CancellationToken cancellationToken)
+    public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting to create store {LegalName}", request.LegalName);
 
-        var storeResult = Store.Domain.Entities.Store.Create(
+        var storeResult = Domain.Entities.Store.Create(
             request.LegalName,
             request.Cnpj,
             request.AddressId,

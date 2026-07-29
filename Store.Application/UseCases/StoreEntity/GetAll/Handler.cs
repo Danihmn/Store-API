@@ -5,21 +5,15 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.StoreEntity.GetAll;
 
-public sealed class Handler (IStoreRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result<IEnumerable<Response>>>
+public sealed class Handler(IStoreRepository repository, ILogger<Handler> logger)
+    : IRequestHandler<Command, Result<IEnumerable<Response>>>
 {
-    public async Task<Result<IEnumerable<Response>>> Handle (Command request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<Response>>> Handle(Command request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching stores with Skip {Skip} and Take {Take}", request.Skip, request.Take);
 
         var stores = await repository.GetAllAsync(request.Skip, request.Take, cancellationToken);
-
-        if (stores is null || !stores.Any())
-        {
-            logger.LogWarning("No stores were found for Skip {Skip} and Take {Take}", request.Skip, request.Take);
-            return Result.Fail<IEnumerable<Response>>("No stores found");
-        }
-
-        var responses = stores.Select(store => new Response(
+        var responses = (stores ?? []).Select(store => new Response(
             Id: store.Id,
             CreatedAt: store.CreatedAt,
             UpdatedAt: store.UpdatedAt,
@@ -27,10 +21,10 @@ public sealed class Handler (IStoreRepository repository, ILogger<Handler> logge
             TradeName: store.TradeName,
             Cnpj: store.Cnpj.Value,
             Active: store.Active,
-            AddressId: store.AddressId));
+            AddressId: store.AddressId)).ToList();
 
-        logger.LogInformation("Returning {Count} stores", responses.Count());
+        logger.LogInformation("Returning {Count} stores", responses.Count);
 
-        return Result.Ok(responses);
+        return Result.Ok<IEnumerable<Response>>(responses);
     }
 }

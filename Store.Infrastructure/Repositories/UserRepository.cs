@@ -40,7 +40,7 @@ public class UserRepository(StoreContext context) : IUserRepository
 
     public async Task<User> UpdateAsync(User entity, CancellationToken cancellationToken = default)
     {
-        context.Users.Update(entity);
+        context.Update(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
@@ -50,7 +50,7 @@ public class UserRepository(StoreContext context) : IUserRepository
         var user = await context.Users.FirstOrDefaultAsync(s => s.Id == id, cancellationToken)
                    ?? throw new KeyNotFoundException("User not found");
 
-        context.Users.Remove(user);
+        context.Remove(user);
         await context.SaveChangesAsync(cancellationToken);
     }
 }

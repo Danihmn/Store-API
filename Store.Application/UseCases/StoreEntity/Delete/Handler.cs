@@ -5,9 +5,9 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.StoreEntity.Delete;
 
-public sealed class Handler (IStoreRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result>
+public sealed class Handler(IStoreRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result>
 {
-    public async Task<Result> Handle (Command request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Attempting to delete store {Id}", request.Id);
 

@@ -37,7 +37,7 @@ public static class OrderProductEndpoints
                     {
                         errors = result.Errors.Select(error => error.Message),
                     });
-            }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin,seller" });
+            }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
 
         group.MapPut("{productId:Guid}", async
         (Guid orderId, Guid productId, Update.Command command, ISender sender,
@@ -51,13 +51,13 @@ public static class OrderProductEndpoints
 
             var result = await sender.Send(merged, cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
-        }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin,seller" });
+        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
 
         group.MapDelete("{productId:Guid}", async
             (Guid orderId, Guid productId, ISender sender, CancellationToken cancellationToken) =>
         {
             var result = await sender.Send(new Delete.Command(orderId, productId), cancellationToken);
             return result.IsSuccess ? Results.NoContent() : Results.NotFound(result);
-        }).RequireAuthorization(new AuthorizeAttribute { Roles = "admin,seller" });
+        }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
     }
 }

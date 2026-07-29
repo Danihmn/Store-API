@@ -5,9 +5,10 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.StoreEntity.Update;
 
-public sealed class Handler (IStoreRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result<Response>>
+public sealed class Handler(IStoreRepository repository, ILogger<Handler> logger)
+    : IRequestHandler<Command, Result<Response>>
 {
-    public async Task<Result<Response>> Handle (Command request, CancellationToken cancellationToken)
+    public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting update for store {Id}", request.Id);
 
@@ -19,7 +20,8 @@ public sealed class Handler (IStoreRepository repository, ILogger<Handler> logge
             return Result.Fail<Response>("Store not found");
         }
 
-        var updateResult = store.UpdateStore(request.LegalName, request.TradeName, request.Cnpj, request.Active, request.AddressId);
+        var updateResult = store.UpdateStore(request.LegalName, request.TradeName, request.Cnpj, request.Active,
+            request.AddressId);
 
         if (updateResult.IsFailed)
         {

@@ -5,9 +5,10 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.StoreEntity.GetById;
 
-public sealed class Handler (IStoreRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result<Response>>
+public sealed class Handler(IStoreRepository repository, ILogger<Handler> logger)
+    : IRequestHandler<Command, Result<Response>>
 {
-    public async Task<Result<Response>> Handle (Command request, CancellationToken cancellationToken)
+    public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Looking up store {Id}", request.Id);
 

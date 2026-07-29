@@ -5,9 +5,9 @@ using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Customer.Delete;
 
-public sealed class Handler (ICustomerRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result>
+public sealed class Handler(ICustomerRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result>
 {
-    public async Task<Result> Handle (Command request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Attempting to delete customer {Id}", request.Id);
 
