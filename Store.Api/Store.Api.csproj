@@ -4,6 +4,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <RestoreEnablePackagePruning>true</RestoreEnablePackagePruning>
         <UserSecretsId>47fed4a7-9937-4cb5-9326-fdf0be49ac76</UserSecretsId>
     </PropertyGroup>
 
