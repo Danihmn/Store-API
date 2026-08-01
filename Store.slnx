@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="Store.Api/Store.Api.csproj" />
+  <Project Path="Store.AppHost/Store.AppHost.csproj" />
   <Project Path="Store.Application/Store.Application.csproj" />
   <Project Path="Store.Domain/Store.Domain.csproj" />
   <Project Path="Store.Infrastructure/Store.Infrastructure.csproj" />
