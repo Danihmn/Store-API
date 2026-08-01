@@ -17,6 +17,7 @@ Store.Domain          # Entidades, Value Objects, interfaces de repositório e a
 Store.Application     # Casos de uso (handlers MediatR)
 Store.Infrastructure  # Implementações de repositório, EF Core, mapeamentos, segurança
 Store.Api             # Endpoints Minimal API, autenticação/autorização, configuração da aplicação
+Store.AppHost         # Orquestração via .NET Aspire (API + banco de dados PostgreSQL)
 Store.Test            # Testes unitários dos handlers (MSTest + Moq)
 ```
 
@@ -77,6 +78,21 @@ Operações disponíveis por entidade:
 - **Autorização baseada em papéis (role)**, com policy `admin` e checagens `RequireRole` por endpoint
 - **OpenAPI** gerado nativamente pelo ASP.NET Core
 - **Scalar** como interface para explorar e testar a API em `/scalar`
+
+## Orquestração com .NET Aspire
+
+O projeto `Store.AppHost` orquestra a aplicação via **.NET Aspire**:
+
+- Provisiona um container **PostgreSQL** (`Aspire.Hosting.PostgreSQL`), com senha via parâmetro secreto e volume de dados persistente
+- Cria o banco `store` dentro do container
+- Sobe o `Store.Api`, referenciando o banco (`WithReference`) e aguardando sua disponibilidade (`WaitFor`) antes de iniciar
+- O `Store.Api` consome a connection string via `Aspire.Npgsql.EntityFrameworkCore.PostgreSQL` (`AddNpgsqlDbContext<StoreContext>("store")`), dispensando a configuração manual de `ConnectionStrings` em `appsettings.json` ao rodar pelo AppHost
+
+Para executar com orquestração:
+
+```
+dotnet run --project Store.AppHost
+```
 
 ## Autenticação e Autorização
 
