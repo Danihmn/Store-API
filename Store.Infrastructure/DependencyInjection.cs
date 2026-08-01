@@ -1,7 +1,9 @@
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Store.Domain.Repositories;
 using Store.Domain.Secutiry;
+using Store.Infrastructure.Data.StoreContext;
 using Store.Infrastructure.Repositories;
 using Store.Infrastructure.Security.Services;
 
@@ -9,21 +11,23 @@ namespace Store.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure (this IServiceCollection services, IConfiguration configuration)
+    public static WebApplicationBuilder AddInfrastructure(this WebApplicationBuilder builder)
     {
-        var jwtKey = configuration["JwtSecretKey"]
-            ?? throw new InvalidOperationException("JwtSecretKey not found in configuration");
+        var jwtKey = builder.Configuration["JwtSecretKey"]
+                     ?? throw new InvalidOperationException("JwtSecretKey not found in configuration");
 
-        services.AddSingleton<ITokenService>(new TokenService(jwtKey));
+        builder.AddNpgsqlDbContext<StoreContext>("store");
 
-        services.AddTransient<ICustomerRepository, CustomerRepository>();
-        services.AddTransient<IProductRepository, ProductRepository>();
-        services.AddTransient<IAddressRepository, AddressRepository>();
-        services.AddTransient<IStoreRepository, StoreRepository>();
-        services.AddTransient<IOrderRepository, OrderRepository>();
-        services.AddTransient<IOrderProductRepository, OrderProductRepository>();
-        services.AddTransient<IUserRepository, UserRepository>();
+        builder.Services.AddSingleton<ITokenService>(new TokenService(jwtKey));
 
-        return services;
+        builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
+        builder.Services.AddTransient<IProductRepository, ProductRepository>();
+        builder.Services.AddTransient<IAddressRepository, AddressRepository>();
+        builder.Services.AddTransient<IStoreRepository, StoreRepository>();
+        builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+        builder.Services.AddTransient<IOrderProductRepository, OrderProductRepository>();
+        builder.Services.AddTransient<IUserRepository, UserRepository>();
+
+        return builder;
     }
 }
