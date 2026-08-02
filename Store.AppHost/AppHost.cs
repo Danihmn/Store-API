@@ -1,5 +1,3 @@
-using Projects;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 var postgresPassword = builder
@@ -13,7 +11,7 @@ var database = postgres
     .AddDatabase("store", databaseName: "store");
 
 builder
-    .AddProject<Store_Api>("api")
+    .AddProject<Projects.Store_Api>("api")
     .WithReference(database)
     .WaitFor(database);
 
