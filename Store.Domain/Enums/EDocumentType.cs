@@ -1,3 +1,7 @@
 ﻿namespace Store.Domain.Enums;
 
-public enum EDocumentType { Cpf, Cnpj }
+public enum EDocumentType
+{
+    Cpf,
+    Cnpj
+}

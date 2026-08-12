@@ -3,7 +3,6 @@ using Scalar.AspNetCore;
 using Serilog;
 using Store.Application;
 using Store.Infrastructure;
-using Store.Infrastructure.Data.StoreContext;
 using Store.Api.Extensions;
 using Store.Api.Middlewares;
 
