@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 using PhoneNumbers;
-using Store.Domain.Abstractions;
+using Store.Domain.ValueObjects.Abstractions;
 
 namespace Store.Domain.ValueObjects;
 
