@@ -1,6 +1,6 @@
 ﻿using FluentResults;
-using Store.Domain.Abstractions;
 using Store.Domain.Enums;
+using Store.Domain.ValueObjects.Abstractions;
 
 namespace Store.Domain.ValueObjects;
 

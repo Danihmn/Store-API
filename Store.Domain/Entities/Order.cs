@@ -1,5 +1,5 @@
 using FluentResults;
-using Store.Domain.Abstractions;
+using Store.Domain.Entities.Abstractions;
 using Store.Domain.Validations;
 using Store.Domain.ValueObjects;
 

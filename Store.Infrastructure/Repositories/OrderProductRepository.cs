@@ -15,9 +15,6 @@ internal class OrderProductRepository(StoreContext context) : IOrderProductRepos
             .Take(take)
             .ToListAsync(cancellationToken);
 
-    public Task<OrderProduct?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => throw new NotSupportedException("OrderProduct uses composite key. Use GetByCompositeKeyAsync.");
-
     public async Task<IEnumerable<OrderProduct>?> GetByOrderIdAsync
         (Guid orderId, CancellationToken cancellationToken = default)
         => await context.OrderProducts
@@ -43,18 +40,6 @@ internal class OrderProductRepository(StoreContext context) : IOrderProductRepos
         context.Update(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
-    }
-
-    public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            throw new NotSupportedException("OrderProduct uses composite key. Use DeleteByCompositeKeyAsync.");
-        }
-        catch (Exception exception)
-        {
-            return Task.FromException(exception);
-        }
     }
 
     public async Task DeleteByCompositeKeyAsync

@@ -1,4 +1,4 @@
-namespace Store.Domain.Abstractions;
+namespace Store.Domain.Entities.Abstractions;
 
 public abstract class Entity
 {
