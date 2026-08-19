@@ -30,7 +30,7 @@ public class Address : Entity
         errors.NotEmpty(city, "City cannot be empty");
         errors.NotEmpty(state, "State cannot be empty");
 
-        if (state.Length > 2)
+        if (state is { Length: > 2 })
             errors.Add(new Error("State should only have the abbreviation"));
 
         var zipCodeResult = ZipCode.Create(zipCode);
@@ -57,11 +57,11 @@ public class Address : Entity
             if (zipCodeResult.IsSuccess) newZipCode = zipCodeResult.Value;
         }
 
-        if (errors.Count > 0)
-            return Result.Fail(errors);
-
         if (state is { Length: > 2 })
             errors.Add(new Error("State should only have the abbreviation"));
+
+        if (errors.Count > 0)
+            return Result.Fail(errors);
 
         Street = street ?? Street;
         City = city ?? City;

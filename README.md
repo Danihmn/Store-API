@@ -18,7 +18,7 @@ Store.Application     # Casos de uso (handlers MediatR)
 Store.Infrastructure  # Implementações de repositório, EF Core, mapeamentos, segurança
 Store.Api             # Endpoints Minimal API, autenticação/autorização, configuração da aplicação
 Store.AppHost         # Orquestração via .NET Aspire (API + banco de dados PostgreSQL)
-Store.Test            # Testes unitários dos handlers (MSTest + Moq)
+Store.Test            # Testes unitários do Domain — Entidades e Value Objects (MSTest)
 ```
 
 ### Domain
@@ -29,7 +29,7 @@ Camada central, sem dependências de outras camadas do projeto.
 - **Classe base:** `Entity` com `Id` (Guid), `CreatedAt` e `UpdatedAt`
 - **Value Objects:** `Email`, `Phone`, `Document` (CPF/CNPJ, validado via `BrDocuments`), `ZipCode`, `Currency`, `Role`, `Status`
 - **Enums:** `ERole` (Admin, Seller, Purchaser, StockClerk), `EStatus` (Pending, Paid, Shipped, Delivered, Canceled), `EDocumentType` (CPF, CNPJ)
-- **Interfaces de repositório:** `IRepository<T>` genérica + interfaces específicas por entidade
+- **Interfaces de repositório:** interfaces segregadas (`IAllReadableRepository<T>`, `IByIdReadableRepository<T>`, `ICreatableRepository<T>`, `IUpdatableRepository<T>`, `IDeletableRepository`), compostas por entidade
 - **Interfaces de segurança:** `IPasswordService`, `ITokenService`
 - **Result pattern:** `Result` e `Result<T>` (via `FluentResults`) para encapsular sucesso/falha sem lançar exceções
 - **Error:** representa erros de domínio retornados via `Result`
@@ -144,7 +144,7 @@ Listagens (`GetAll`) suportam paginação via query string `skip` e `take` (padr
 | libphonenumber-csharp | Validação de telefone |
 | Scalar | Interface OpenAPI |
 | Serilog | Logging estruturado (console + arquivo) |
-| MSTest + Moq | Testes unitários |
+| MSTest | Testes unitários |
 
 ## Logs
 
@@ -160,7 +160,10 @@ Configuração em `appsettings.json`, seção `Serilog`.
 
 ## Testes
 
-O projeto `Store.Test` cobre os handlers de todos os casos de uso em `Store.Application` com testes unitários (MSTest), usando `Moq` para simular os repositórios.
+O projeto `Store.Test` cobre a camada `Store.Domain` com testes unitários (MSTest):
+
+- **Entidades:** `Address`, `Customer`, `Order`, `OrderProduct`, `Product`, `Store`, `User`
+- **Value Objects:** `Document`, `Email`, `Phone`, `Role`, `ZipCode`
 
 ## Configuração
 
