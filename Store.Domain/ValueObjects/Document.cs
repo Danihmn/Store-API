@@ -5,18 +5,18 @@ using Store.Domain.ValueObjects.Abstractions;
 
 namespace Store.Domain.ValueObjects;
 
-public class Document : ValueObject
+public record Document : ValueObject
 {
     public string Value { get; }
-    public EDocumentType Type { get; }
+    private EDocumentType Type { get; }
 
-    private Document (string value, EDocumentType type)
+    private Document(string value, EDocumentType type)
     {
         Value = value;
         Type = type;
     }
 
-    public static Document FromPersistence (string value)
+    public static Document FromPersistence(string value)
     {
         var clean = Clean(value);
         var type = clean.Length == 11 ? EDocumentType.Cpf : EDocumentType.Cnpj;
@@ -24,7 +24,7 @@ public class Document : ValueObject
         return new Document(value, type);
     }
 
-    public static Result<Document> Create (string value)
+    public static Result<Document> Create(string value)
     {
         var clean = Clean(value);
 
@@ -50,24 +50,14 @@ public class Document : ValueObject
         return Result.Ok(new Document(value, type));
     }
 
-    private static string Clean (string value)
+    private static string Clean(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Document cannot be empty.");
-
-        return new string(value.Where(char.IsDigit).ToArray());
+        return string.IsNullOrWhiteSpace(value)
+            ? throw new ArgumentException("Document cannot be empty.")
+            : new string(value.Where(char.IsDigit).ToArray());
     }
 
-    public override bool Equals (object? obj)
-    {
-        if (obj is not Document other) return false;
-        return Value == other.Value && Type == other.Type;
-    }
+    public override int GetHashCode() => HashCode.Combine(Value, Type);
 
-    public override int GetHashCode () => HashCode.Combine(Value, Type);
-
-    public static bool operator == (Document? left, Document? right) => Equals(left, right);
-    public static bool operator != (Document? left, Document? right) => !Equals(left, right);
-
-    public override string ToString () => Value;
+    public override string ToString() => Value;
 }

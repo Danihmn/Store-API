@@ -3,7 +3,7 @@ using Store.Domain.ValueObjects.Abstractions;
 
 namespace Store.Domain.ValueObjects;
 
-public class ZipCode : ValueObject
+public record ZipCode : ValueObject
 {
     public string Value { get; }
 

@@ -4,7 +4,7 @@ using Store.Domain.ValueObjects.Abstractions;
 
 namespace Store.Domain.ValueObjects;
 
-public class Status : ValueObject
+public record Status : ValueObject
 {
     public EStatus Value { get; }
 

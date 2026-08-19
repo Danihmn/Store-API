@@ -4,7 +4,7 @@ using Store.Domain.ValueObjects.Abstractions;
 
 namespace Store.Domain.ValueObjects;
 
-public class Role : ValueObject
+public record Role : ValueObject
 {
     public string Value { get; }
     public ERole Type { get; }

@@ -6,9 +6,9 @@ namespace Store.Test.Domain.ValueObjects;
 public class EmailTests
 {
     [TestMethod]
-    public void CreateEmail_ShouldValidateEmail_WhenValidData ()
+    public void CreateEmail_ShouldValidateEmail_WhenValidData()
     {
-        var email = "daniel.bezerra.mult@outlook.com";
+        const string email = "daniel.bezerra.mult@outlook.com";
         var result = Email.Create(email);
 
         Assert.IsTrue(result.IsSuccess);
@@ -16,9 +16,9 @@ public class EmailTests
     }
 
     [TestMethod]
-    public void CreateEmail_ShouldReturnError_WhenInvalidData ()
+    public void CreateEmail_ShouldReturnError_WhenInvalidData()
     {
-        var email = "invalid_email";
+        const string email = "invalid_email";
         var result = Email.Create(email);
 
         Assert.IsFalse(result.IsSuccess);

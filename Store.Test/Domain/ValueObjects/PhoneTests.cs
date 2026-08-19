@@ -6,9 +6,9 @@ namespace Store.Test.Domain.ValueObjects;
 public class PhoneTests
 {
     [TestMethod]
-    public void CreatePhone_ShouldValidatePhone_WhenValidData ()
+    public void CreatePhone_ShouldValidatePhone_WhenValidData()
     {
-        var phone = "+5519993054611";
+        const string phone = "+5519993054611";
         var result = Phone.Create(phone);
 
         Assert.IsTrue(result.IsSuccess);
@@ -16,9 +16,9 @@ public class PhoneTests
     }
 
     [TestMethod]
-    public void CreatePhone_ShouldReturnError_WhenInvalidData ()
+    public void CreatePhone_ShouldReturnError_WhenInvalidData()
     {
-        var phone = "invalid_phone";
+        const string phone = "invalid_phone";
         var result = Phone.Create(phone);
 
         Assert.IsFalse(result.IsSuccess);

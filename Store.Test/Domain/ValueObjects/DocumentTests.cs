@@ -6,7 +6,7 @@ namespace Store.Test.Domain.ValueObjects;
 public class DocumentTests
 {
     [TestMethod]
-    public void Document_ShouldBeValid_WhenValidNotFormattedDocumentIsProvided ()
+    public void Document_ShouldBeValid_WhenValidNotFormattedDocumentIsProvided()
     {
         var validDocument = "60437332000160";
         var document = Document.Create(validDocument);
@@ -16,9 +16,9 @@ public class DocumentTests
     }
 
     [TestMethod]
-    public void Document_ShouldBeValid_WhenValidFormattedDocumentIsProvided ()
+    public void Document_ShouldBeValid_WhenValidFormattedDocumentIsProvided()
     {
-        var validDocument = "99.336.499/0001-70";
+        const string validDocument = "99.336.499/0001-70";
         var document = Document.Create(validDocument);
 
         Assert.IsTrue(document.IsSuccess);
@@ -26,7 +26,7 @@ public class DocumentTests
     }
 
     [TestMethod]
-    public void Document_ShouldBeValid_WhenInvalidDocumentIsProvided ()
+    public void Document_ShouldBeValid_WhenInvalidDocumentIsProvided()
     {
         var invalidDocument = "1234";
         var document = Document.Create(invalidDocument);

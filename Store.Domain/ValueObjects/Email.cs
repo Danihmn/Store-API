@@ -4,7 +4,7 @@ using Store.Domain.ValueObjects.Abstractions;
 
 namespace Store.Domain.ValueObjects;
 
-public class Email : ValueObject
+public record Email : ValueObject
 {
     public string Value { get; }
 

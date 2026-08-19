@@ -4,7 +4,7 @@ using Store.Domain.ValueObjects.Abstractions;
 
 namespace Store.Domain.ValueObjects;
 
-public class Phone : ValueObject
+public record Phone : ValueObject
 {
     public string Value { get; }
 
@@ -33,7 +33,7 @@ public class Phone : ValueObject
 
     private static bool IsValid (string number)
     {
-        var util = PhoneNumbers.PhoneNumberUtil.GetInstance();
+        var util = PhoneNumberUtil.GetInstance();
         var phoneNumber = util.Parse(number, null);
 
         return util.IsValidNumber(phoneNumber);

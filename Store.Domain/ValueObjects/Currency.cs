@@ -3,7 +3,7 @@ using Store.Domain.ValueObjects.Abstractions;
 
 namespace Store.Domain.ValueObjects;
 
-public class Currency : ValueObject
+public record Currency : ValueObject
 {
     public decimal Value { get; }
 
