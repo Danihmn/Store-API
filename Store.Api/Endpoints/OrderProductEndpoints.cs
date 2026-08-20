@@ -16,7 +16,7 @@ public static class OrderProductEndpoints
 
         group.MapGet("", async (Guid orderId, ISender sender, CancellationToken cancellationToken) =>
         {
-            var result = await sender.Send(new GetByOrderId.Command(orderId), cancellationToken);
+            var result = await sender.Send(new GetByOrderId.Query(orderId), cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
         }).RequireAuthorization();
 

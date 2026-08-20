@@ -1,11 +1,11 @@
 using FluentResults;
-using MediatR;
 using Microsoft.Extensions.Logging;
+using Store.Application.Abstractions.Messaging;
 using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Address.Create;
 
-public sealed class Handler (IAddressRepository repository, ILogger<Handler> logger) : IRequestHandler<Command, Result<Response>>
+public sealed class Handler (IAddressRepository repository, ILogger<Handler> logger) : ICommandHandler<Command, Response>
 {
     public async Task<Result<Response>> Handle (Command request, CancellationToken cancellationToken)
     {

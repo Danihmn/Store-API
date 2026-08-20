@@ -1,14 +1,14 @@
 using FluentResults;
-using MediatR;
 using Microsoft.Extensions.Logging;
+using Store.Application.Abstractions.Messaging;
 using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Order.GetById;
 
 public sealed class Handler(IOrderRepository repository, ILogger<Handler> logger)
-    : IRequestHandler<Command, Result<Response>>
+    : IQueryHandler<Query, Response>
 {
-    public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
+    public async Task<Result<Response>> Handle(Query request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching order {OrderId}", request.Id);
 

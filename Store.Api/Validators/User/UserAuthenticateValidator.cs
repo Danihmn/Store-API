@@ -3,7 +3,7 @@ using Store.Application.UseCases.User.Authenticate;
 
 namespace Store.Api.Validators.User;
 
-public sealed class UserAuthenticateValidator : AbstractValidator<Command>
+public sealed class UserAuthenticateValidator : AbstractValidator<Query>
 {
     public UserAuthenticateValidator()
     {

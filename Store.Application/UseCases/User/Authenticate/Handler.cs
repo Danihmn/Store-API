@@ -1,7 +1,7 @@
 ﻿using FluentResults;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
+using Store.Application.Abstractions.Messaging;
 using Store.Domain.Repositories;
 using Store.Domain.Secutiry;
 using Store.Infrastructure.Security.Services;
@@ -9,10 +9,9 @@ using Store.Infrastructure.Security.Services;
 namespace Store.Application.UseCases.User.Authenticate;
 
 public class Handler(IUserRepository repository, ITokenService tokenService, ILogger<Handler> logger)
-    : IRequestHandler<Command,
-        Result<Response>>
+    : IQueryHandler<Query, Response>
 {
-    public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
+    public async Task<Result<Response>> Handle(Query request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Entering Authenticate Handler with user {User}", request.Email);
 

@@ -24,15 +24,15 @@ public static class UserEndpoints
             });
 
         group.MapPost("authenticate", async
-        (ISender sender, CancellationToken cancellationToken, Authenticate.Command command,
-            IValidator<Authenticate.Command> validator) =>
+        (ISender sender, CancellationToken cancellationToken, Authenticate.Query query,
+            IValidator<Authenticate.Query> validator) =>
         {
-            var validation = await validator.ValidateAsync(command, cancellationToken);
+            var validation = await validator.ValidateAsync(query, cancellationToken);
 
             if (!validation.IsValid)
                 return Results.BadRequest(validation.ToDictionary());
 
-            var result = await sender.Send(command, cancellationToken);
+            var result = await sender.Send(query, cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.Unauthorized();
         });
 

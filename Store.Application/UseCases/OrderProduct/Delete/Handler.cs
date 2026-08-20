@@ -1,12 +1,12 @@
 using FluentResults;
-using MediatR;
 using Microsoft.Extensions.Logging;
+using Store.Application.Abstractions.Messaging;
 using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.OrderProduct.Delete;
 
 public sealed class Handler(IOrderProductRepository repository, ILogger<Handler> logger)
-    : IRequestHandler<Command, Result>
+    : ICommandHandler<Command>
 {
     public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
     {

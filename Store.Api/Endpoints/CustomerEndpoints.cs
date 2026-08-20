@@ -17,13 +17,13 @@ public static class CustomerEndpoints
 
         group.MapGet("", async (ISender sender, CancellationToken cancellationToken, int skip = 0, int take = 10) =>
         {
-            var result = await sender.Send(new GetAll.Command(skip, take), cancellationToken);
+            var result = await sender.Send(new GetAll.Query(skip, take), cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
         }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
 
         group.MapGet("{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
-            var result = await sender.Send(new GetById.Command(id), cancellationToken);
+            var result = await sender.Send(new GetById.Query(id), cancellationToken);
             return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result);
         }).RequireAuthorization(policy => policy.RequireRole("admin", "seller"));
 

@@ -1,14 +1,14 @@
 using FluentResults;
-using MediatR;
 using Microsoft.Extensions.Logging;
+using Store.Application.Abstractions.Messaging;
 using Store.Domain.Repositories;
 
 namespace Store.Application.UseCases.Customer.GetAll;
 
 public sealed class Handler(ICustomerRepository repository, ILogger<Handler> logger)
-    : IRequestHandler<Command, Result<IEnumerable<Response>>>
+    : IQueryHandler<Query, IEnumerable<Response>>
 {
-    public async Task<Result<IEnumerable<Response>>> Handle(Command request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<Response>>> Handle(Query request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching customers with Skip {Skip} and Take {Take}", request.Skip, request.Take);
 

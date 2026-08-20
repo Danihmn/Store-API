@@ -1,6 +1,5 @@
-using FluentResults;
-using MediatR;
+using Store.Application.Abstractions.Messaging;
 
 namespace Store.Application.UseCases.Customer.Delete;
 
-public sealed record Command (Guid Id) : IRequest<Result>;
+public sealed record Command (Guid Id) : ICommand;
