@@ -167,13 +167,51 @@ O projeto `Store.Test` cobre a camada `Store.Domain` com testes unitários (MSTe
 
 ## Configuração
 
-Requer uma string de conexão PostgreSQL e uma chave JWT em `appsettings.json`:
+Para rodar o `Store.Api` diretamente (sem o AppHost) é necessário um PostgreSQL, uma string de conexão e uma chave JWT. Os valores sensíveis ficam nos **user-secrets** (fora do repositório); não coloque senhas no `appsettings.json`.
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=...;Database=...;Username=...;Password=..."
-  },
-  "JwtSecretKey": "..."
-}
+### 1. Subir o PostgreSQL com Docker
+
+```bash
+docker volume create store-postgres-data
+docker run -d --name store-postgres \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=<sua-senha> \
+  -e POSTGRES_DB=store \
+  -p 5433:5432 \
+  -v store-postgres-data:/var/lib/postgresql/data \
+  postgres:16
 ```
+
+### 2. Configurar os user-secrets
+
+O `AddNpgsqlDbContext<StoreContext>("store")` lê `ConnectionStrings:store`; `ConnectionStrings:DefaultConnection` é o fallback do `StoreContext`.
+
+```bash
+CS="Host=localhost;Port=5433;Database=store;Username=postgres;Password=<sua-senha>"
+dotnet user-secrets set "ConnectionStrings:store" "$CS" --project Store.Api
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "$CS" --project Store.Api
+dotnet user-secrets set "JwtSecretKey" "<chave-aleatoria-com-32+-caracteres>" --project Store.Api
+```
+
+Para rodar pelo AppHost (que cria o próprio container PostgreSQL), defina também a senha do banco dele:
+
+```bash
+dotnet user-secrets set "Parameters:postgres-password" "<outra-senha>" --project Store.AppHost
+```
+
+### 3. Aplicar as migrations
+
+```bash
+dotnet tool install --global dotnet-ef --version 10.0.12
+dotnet ef database update --project Store.Infrastructure --startup-project Store.Api
+```
+
+Isso cria os schemas `store` e `catalog` e as tabelas do projeto.
+
+### 4. Executar
+
+```bash
+dotnet run --project Store.Api --launch-profile http
+```
+
+A documentação interativa fica em `http://localhost:5218/scalar`.

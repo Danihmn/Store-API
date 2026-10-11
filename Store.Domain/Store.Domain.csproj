@@ -11,7 +11,7 @@
         <PackageReference Include="BrDocuments" Version="1.0.1"/>
         <PackageReference Include="EmailValidation" Version="1.4.0" />
         <PackageReference Include="FluentResults" Version="4.0.0"/>
-        <PackageReference Include="libphonenumber-csharp" Version="9.0.37" />
+        <PackageReference Include="libphonenumber-csharp" Version="9.0.41" />
     </ItemGroup>
 
 </Project>
